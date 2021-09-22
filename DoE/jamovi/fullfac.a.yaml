@@ -1,0 +1,56 @@
+---
+name:  fullFac
+title: Full Factorial
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: numberFactors
+      title: Number of factors
+      type: Integer
+
+    - name: nameFactors
+      title: Name of factors
+      type: String
+
+    - name: numberFactorLevels
+      title: Number of factor levels
+      type: String
+
+    - name: eachFactorLevels
+      title: Each of factor levels
+      type: String
+
+    - name: numberBlocks
+      title: Number of blocks
+      type: Integer
+      default: 1
+
+    - name: nameBlocks
+      title: Name of blocks
+      type: String
+      default: "Blocks"
+
+    - name: replications
+      title: Replications
+      type: Integer
+      default: 1
+
+    - name: repeatOnly
+      title: Repeat only
+      type: Bool
+    
+    - name: seed
+      title: Seed
+      type: Integer
+      default: 25474
+      
+    - name: randomize
+      title: Randomize
+      type: Bool
+      
+...

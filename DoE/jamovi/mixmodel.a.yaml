@@ -1,0 +1,111 @@
+---
+name:  mixModel
+title: Mixture Model
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: indep
+      title: Independent Variable
+      type: Variable
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+    - name: deps
+      title: Dependent Variables
+      type: Variables
+
+    - name: mixModelType
+      title: Mixture model type
+      type: List
+      options:
+        - title: '1'
+          name: '1'
+        - title: '2'
+          name: '2'
+        - title: '3'
+          name: '3'
+        - title: '4'
+          name: '4'
+        - title: '5'
+          name: '5'
+        - title: '6'
+          name: '6'
+      default: '2'
+          
+    - name: modelContourPlotSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+    - name: effectPlotModelType
+      title: Model type
+      type: List
+      options:
+        - title: 'Linear'
+          name: '1'
+        - title: 'Quadratic'
+          name: '2'
+        - title: 'Cubic'
+          name: '3'
+        - title: 'Special Cubic'
+          name: '4'
+        - title: 'Mixture Process Variable'
+          name: '5'
+        - title: 'Kowalski, Cornell and Vining'
+          name: '6'
+      default: '2'
+
+    - name: numFactors
+      title: Number of factors
+      type: Integer
+      default: 2
+
+    - name: direction
+      title: Direction
+      type: List
+      options:
+        - title: 'Piepel'
+          name: '1'
+        - title: 'Cox'
+          name: '2'
+      default: '1'
+
+    - name: numProcessVar
+      title: Number of process variables
+      type: Integer
+      default: 0
+
+    - name: effectPlotSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+    - name: mixturePlotModelType
+      title: Model type
+      type: List
+      options:
+        - title: 'Linear'
+          name: '1'
+        - title: 'Quadratic'
+          name: '2'
+        - title: 'Special Cubic'
+          name: '4'
+      default: '2'
+
+    - name: numBreaks
+      title: Number of breaks
+      type: Integer
+      default: 10
+
+    - name: mixtureContourPlotSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+...

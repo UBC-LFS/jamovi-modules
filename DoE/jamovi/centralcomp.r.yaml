@@ -1,0 +1,16 @@
+---
+name:  centralComp
+title: Central Composite
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+      
+    - name: text
+      title: Central Composite
+      type: Preformatted
+
+...

@@ -1,0 +1,78 @@
+---
+title: Design of Experiments in R
+name: DoE
+version: 1.0.1
+jms: '1.0'
+authors:
+  - Brandon Oh
+maintainer: Brandon Oh <brandon.oh@ubc.ca>
+date: '2021-09-21'
+type: R
+description: >-
+  This module is designed for learning Design of Experiments (DoE) and running
+  under R packages such as DoE.base, FrF2, DoE.wrapper and mixexp.
+analyses:
+  - title: Full Factorial
+    name: fullFac
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Factorial Designs
+    menuTitle: Full Factorial
+  - title: Fractional Factorial
+    name: fracFac
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Factorial Designs
+    menuTitle: Fractional Factorial
+  - title: Box Behnken
+    name: boxBehnken
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Response Surface Designs
+    menuTitle: Box Behnken
+  - title: Central Composite
+    name: centralComp
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Response Surface Designs
+    menuTitle: Central Composite
+  - title: Simplex Centroid
+    name: simplexCentroid
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Mixture Designs
+    menuTitle: Simplex Centroid
+  - title: Simplex Lattice
+    name: simplexLattice
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Mixture Designs
+    menuTitle: Simplex Lattice
+  - title: Extreme Vertices
+    name: extremeVertices
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Mixture Designs
+    menuTitle: Extreme Vertices
+  - title: Taguchi
+    name: taguchi
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: More Designs
+    menuTitle: Taguchi
+  - title: Linear Model
+    name: linModel
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Models
+    menuTitle: Linear Model
+  - title: Mixture Model
+    name: mixModel
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Models
+    menuTitle: Mixture Model
+usesNative: true
+minApp: 1.0.8
+
+...

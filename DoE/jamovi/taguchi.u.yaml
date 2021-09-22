@@ -1,0 +1,39 @@
+title: Taguchi
+name: taguchi
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: Label
+    label: Factor Details
+    children:
+      - type: TextBox
+        name: numberFactors
+        format: number
+      - type: TextBox
+        name: nameFactors
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: numberFactorLevels
+        format: number
+      - type: TextBox
+        name: eachFactorLevels
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Orthogonal Arrays
+    children:
+      - type: ComboBox
+        name: design
+  - type: Label
+    label: Replications
+    children:
+      - type: TextBox
+        name: replicates
+        format: number
+  - type: Label
+    label: Randomization
+    children:
+      - type: CheckBox
+        name: randomize

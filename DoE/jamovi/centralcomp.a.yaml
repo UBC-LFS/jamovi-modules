@@ -1,0 +1,73 @@
+---
+name:  centralComp
+title: Central Composite
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: numberCenter
+      title: Number of center points
+      type: Integer
+
+    - name: numberCube
+      title: Number of cube points
+      type: Integer
+
+    - name: alpha
+      title: Alpha
+      type: List
+      options:
+        - title: Orthogonal
+          name: orthogonal
+        - title: Rotatable
+          name: rotatable
+        - title: '1'
+          name: '1'
+      default: 'rotatable'
+      
+    - name: numberFactors
+      title: Number of factors
+      type: Integer
+
+    - name: nameFactors
+      title: Name of factors
+      type: String
+
+    - name: defaultLevels
+      title: Default levels
+      type: String
+
+    - name: numberBlocks
+      title: Number of blocks
+      type: Integer
+      default: 1
+
+    - name: nameBlocks
+      title: Name of blocks
+      type: String
+      default: "Blocks"
+
+    - name: replications
+      title: Replications
+      type: Integer
+      default: 1
+
+    - name: randomize
+      title: Randomize
+      type: Bool
+
+    - name: seed1
+      title: Seed 1
+      type: Integer
+      default: 2784
+
+    - name: seed2
+      title: Seed 2
+      type: Integer
+      default: 8926
+
+...

@@ -1,0 +1,34 @@
+title: Box Behnken
+name: boxBehnken
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: Label
+    label: Factor Details
+    children:
+      - type: TextBox
+        name: numberCenter
+        format: number
+  - type: Label
+    label: Factor Details
+    children:
+      - type: TextBox
+        name: numberFactors
+        format: number
+      - type: TextBox
+        name: nameFactors
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: defaultLevels
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Factor Details
+    children:
+      - type: TextBox
+        name: seed
+        format: number
+      - type: CheckBox
+        name: randomize

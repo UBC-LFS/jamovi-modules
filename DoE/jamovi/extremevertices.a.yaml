@@ -1,0 +1,24 @@
+---
+name:  extremeVertices
+title: Extreme Vertices
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: numberFactors
+      title: Number of factors
+      type: Integer
+
+    - name: lowerConstraints
+      title: Lower constraints
+      type: String
+
+    - name: upperConstraints
+      title: Upper constraints
+      type: String
+
+...

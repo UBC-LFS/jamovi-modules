@@ -1,0 +1,55 @@
+---
+name:  linModel
+title: Linear Model
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+
+    - name: linearReg
+      title: Linear Regression
+      type: Preformatted
+
+    - name: anova
+      title: ANOVA
+      type: Preformatted
+
+    - name: paretoPlot
+      title: Pareto Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .paretoPlot
+
+    - name: normalPlot
+      title: Normal Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .normalPlot
+
+    - name: mainEffectsPlot
+      title: Main Effects Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .mainEffectsPlot
+      
+    - name: interactionPlot
+      title: Interaction Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .interactionPlot
+      
+    - name: contourPlot
+      title: Contour Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .contourPlot
+
+...

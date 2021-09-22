@@ -1,0 +1,20 @@
+title: Simplex Lattice
+name: simplexLattice
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: Label
+    label: Base Settings
+    children:
+      - type: TextBox
+        name: fac
+        format: number
+      - type: TextBox
+        name: lev
+        format: number
+  - type: Label
+    label: Plots
+    children:
+      - type: CheckBox
+        name: designPoints

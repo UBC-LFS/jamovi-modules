@@ -1,0 +1,20 @@
+title: Extreme Vertices
+name: extremeVertices
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: Label
+    label: Base Settings
+    children:
+      - type: TextBox
+        name: numberFactors
+        format: number
+      - type: TextBox
+        name: lowerConstraints
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: upperConstraints
+        format: string
+        stretchFactor: 6

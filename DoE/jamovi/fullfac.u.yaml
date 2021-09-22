@@ -1,0 +1,51 @@
+title: Full Factorial
+name: fullFac
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: Label
+    label: Factor Details
+    children:
+      - type: TextBox
+        name: numberFactors
+        format: number
+      - type: TextBox
+        name: nameFactors
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: numberFactorLevels
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: eachFactorLevels
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Blocks
+    children:
+      - type: TextBox
+        name: numberBlocks
+        format: number
+      - type: TextBox
+        name: nameBlocks
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Replications
+    children:
+      - type: TextBox
+        name: replications
+        format: number
+      - type: CheckBox
+        name: repeatOnly
+  - type: Label
+    label: Randomization
+    children:
+      - type: TextBox
+        name: seed
+        format: number
+      - type: CheckBox
+        name: randomize
+      

@@ -1,0 +1,86 @@
+---
+name:  fracFac
+title: Fractional Factorial
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: numberRuns
+      title: Number of runs
+      type: Integer
+
+    - name: numberFactors
+      title: Number of factors
+      type: Integer
+
+    - name: nameFactors
+      title: Name of factors
+      type: String
+
+    - name: defaultLevels
+      title: Default Levels
+      type: String
+
+    - name: numberCenter
+      title: Number of center
+      type: Integer
+      default: 0
+
+    - name: numberBlocks
+      title: Number of blocks
+      type: Integer
+      default: 1
+
+    - name: nameBlocks
+      title: Name of blocks
+      type: String
+      default: "Blocks"
+
+    - name: aliased2fis
+      title: Blocks may be aliased with 2fis
+      type: Bool
+
+    - name: aliasInfo
+      title: Alias info
+      type: List
+      options:
+        - title: '2'
+          name: '2'
+        - title: '2'
+          name: '3'
+      default: '2'
+
+    - name: replications
+      title: Replications
+      type: Integer
+      default: 1
+
+    - name: repeatOnly
+      title: Repeat only
+      type: Bool
+
+    - name: seed
+      title: Seed
+      type: Integer
+      default: 8195
+
+    - name: randomize
+      title: Randomize
+      type: Bool
+
+    - name: resolution
+      title: Resolution
+      type: List
+      options:
+        - title: III
+          name: '3'
+        - title: IV
+          name: '4'
+        - title: V
+          name: '5'
+
+...

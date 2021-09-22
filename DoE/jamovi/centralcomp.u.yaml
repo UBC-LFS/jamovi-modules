@@ -1,0 +1,58 @@
+title: Central Composite
+name: centralComp
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: Label
+    label: Base Settings
+    children:
+      - type: TextBox
+        name: numberCenter
+        format: number
+      - type: TextBox
+        name: numberCube
+        format: number
+      - type: ComboBox
+        name: alpha
+  - type: Label
+    label: Factor Details
+    children:
+      - type: TextBox
+        name: numberFactors
+        format: number
+      - type: TextBox
+        name: nameFactors
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: defaultLevels
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Blocks
+    children:
+      - type: TextBox
+        name: numberBlocks
+        format: number
+      - type: TextBox
+        name: nameBlocks
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Replications
+    children:
+      - type: TextBox
+        name: replications
+        format: number
+  - type: Label
+    label: Randomization
+    children:
+      - type: TextBox
+        name: seed1
+        format: number
+      - type: TextBox
+        name: seed2
+        format: number
+      - type: CheckBox
+        name: randomize

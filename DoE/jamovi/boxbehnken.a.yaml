@@ -1,0 +1,37 @@
+---
+name:  boxBehnken
+title: Box Behnken
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: numberFactors
+      title: Number of factors
+      type: Integer
+
+    - name: nameFactors
+      title: Name of factors
+      type: String
+
+    - name: defaultLevels
+      title: Default Levels
+      type: String
+
+    - name: numberCenter
+      title: Number of center points
+      type: Integer
+
+    - name: randomize
+      title: Randomize
+      type: Bool
+
+    - name: seed
+      title: Seed
+      type: Integer
+      default: 3432
+      
+...

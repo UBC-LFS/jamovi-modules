@@ -1,0 +1,67 @@
+title: Fractional Factorial
+name: fracFac
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: Label
+    label: Base Settings
+    children:
+      - type: TextBox
+        name: numberRuns
+        format: number
+      - type: TextBox
+        name: numberCenter
+        format: number
+      - type: ComboBox
+        name: resolution
+  - type: Label
+    label: Factor Details
+    children:
+      - type: LayoutBox
+        stretchFactor: 12
+        children:
+          - type: TextBox
+            name: numberFactors
+            format: number
+          - type: TextBox
+            name: nameFactors
+            format: string
+            stretchFactor: 6
+          - type: TextBox
+            name: defaultLevels
+            format: string
+            stretchFactor: 6
+  - type: Label
+    label: Blocks
+    children:
+      - type: TextBox
+        name: numberBlocks
+        format: number
+      - type: TextBox
+        name: nameBlocks
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Replications
+    children:
+      - type: TextBox
+        name: replications
+        format: number
+      - type: CheckBox
+        name: repeatOnly
+  - type: Label
+    label: Randomization
+    children:
+      - type: TextBox
+        name: seed
+        format: number
+      - type: CheckBox
+        name: randomize
+  - type: Label
+    label: Alias
+    children:
+      - type: ComboBox
+        name: aliasInfo
+      - type: CheckBox
+        name: aliased2fis

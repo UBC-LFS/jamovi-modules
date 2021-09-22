@@ -1,0 +1,81 @@
+---
+name:  taguchi
+title: Taguchi
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: numberFactors
+      title: Number of factors
+      type: Integer
+
+    - name: nameFactors
+      title: Name of factors
+      type: String
+
+    - name: numberFactorLevels
+      title: Number of factor levels
+      type: Integer
+
+    - name: eachFactorLevels
+      title: Each of factor levels
+      type: String
+
+    - name: design
+      title: Design
+      type: List
+      options:
+        - title: L4_2
+          name: 'L4_2'
+        - title: L8_2
+          name: 'L8_2'
+        - title: L9_3
+          name: 'L9_3'
+        - title: L12_2
+          name: 'L12_2'
+        - title: L16_2
+          name: 'L16_2'
+        - title: L16_4
+          name: 'L16_4'
+        - title: L18_2_3
+          name: 'L18_2_3'
+        - title: L25_5
+          name: 'L25_5'
+        - title: L27_3
+          name: 'L27_3'
+        - title: L32_2
+          name: 'L32_2'
+        - title: L32_2_4
+          name: 'L32_2_4'
+        - title: L36_2_3_a
+          name: 'L36_2_3_a'
+        - title: L36_2_3_b
+          name: 'L36_2_3_b'
+        - title: L50_2_5
+          name: 'L50_2_5'
+        - title: L8_4_2
+          name: 'L8_4_2'
+        - title: L16_4_2_a
+          name: 'L16_4_2_a'
+        - title: L16_4_2_b
+          name: 'L16_4_2_b'
+        - title: L16_4_2_c
+          name: 'L16_4_2_c'
+        - title: L16_4_2_d
+          name: 'L16_4_2_d'
+        - title: L18_6_3
+          name: 'L18_6_3'
+
+    - name: replicates
+      title: Replicates
+      type: Integer
+      default: 1
+
+    - name: randomize
+      title: Randomize
+      type: Bool
+...

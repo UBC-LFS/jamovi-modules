@@ -1,0 +1,23 @@
+---
+name:  simplexLattice
+title: Simplex Lattice
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+      
+    - name: text
+      title: Simplex Lattice
+      type: Preformatted
+
+    - name: designPointsPlot
+      title: Design Points Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .designPointsPlot
+
+...

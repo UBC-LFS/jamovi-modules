@@ -1,0 +1,16 @@
+---
+name:  extremeVertices
+title: Extreme Vertices
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+      
+    - name:  text
+      title: Extreme Vertices
+      type:  Preformatted
+
+...

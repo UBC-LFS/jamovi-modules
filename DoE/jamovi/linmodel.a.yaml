@@ -1,0 +1,86 @@
+---
+name:  linModel
+title: Linear Model
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: indep
+      title: Independent Variable
+      type: Variable
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+
+    - name: deps
+      title: Dependent Variables
+      type: Variables
+
+    - name: linRegSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+    - name: formula
+      title: Formula
+      type: String
+
+    - name: anovaSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+    - name: anovaType
+      title: ANOVA Type
+      type: List
+      options:
+        - title: II
+          name: '2'
+        - title: III
+          name: '3'
+      default: '2'
+
+    - name: paretoSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+    - name: normalSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+    - name: isHalfNormal
+      title: Half Normal Plot?
+      type: Bool
+      default: true
+
+    - name: alpha
+      title: Significance Level (alpha)
+      type: String
+
+    - name: mainEffectsSwitch
+      title: Main Effects
+      type: Bool
+      default: false
+
+    - name: interactionSwitch
+      title: Interaction Matrix
+      type: Bool
+      default: false
+      
+    - name: contourFormula
+      title: Formula
+      type: String
+
+    - name: contourSwitch
+      title: Display?
+      type: Bool
+      default: false
+
+...

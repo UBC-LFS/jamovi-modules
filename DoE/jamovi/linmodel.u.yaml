@@ -1,0 +1,77 @@
+title: Linear Model
+name: linModel
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Independent Variable
+        children:
+          - type: VariablesListBox
+            name: indep
+            maxItemCount: 1
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Dependent Variables
+        children:
+          - type: VariablesListBox
+            name: deps
+            isTarget: true
+  - type: Label
+    label: Linear Regression
+    children:
+      - type: TextBox
+        name: formula
+        format: string
+        stretchFactor: 6
+      - type: CheckBox
+        name: linRegSwitch
+  - type: Label
+    label: ANOVA
+    children:
+      - type: ComboBox
+        name: anovaType
+      - type: CheckBox
+        name: anovaSwitch
+  - type: Label
+    label: Plots
+    children:
+      - type: Label
+        label: Pareto Plot
+        margin: large
+        children:
+          - type: CheckBox
+            name: paretoSwitch
+      - type: Label
+        label: Normal Plot
+        margin: large
+        children:
+          - type: TextBox
+            name: alpha
+            format: string
+          - type: CheckBox
+            name: isHalfNormal
+          - type: CheckBox
+            name: normalSwitch
+      - type: Label
+        label: Main Effects and Interaction Plot
+        margin: large
+        children:
+          - type: CheckBox
+            name: mainEffectsSwitch
+          - type: CheckBox
+            name: interactionSwitch
+      - type: Label
+        label: Contour Plot
+        margin: large
+        children:
+          - type: TextBox
+            name: contourFormula
+            format: string
+            stretchFactor: 6
+          - type: CheckBox
+            name: contourSwitch

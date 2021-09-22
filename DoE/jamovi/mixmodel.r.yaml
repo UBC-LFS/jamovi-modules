@@ -1,0 +1,36 @@
+---
+name:  mixModel
+title: Mixture Model
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+
+    - name: mixModel
+      title: Mixture Model
+      type: Preformatted
+
+    - name: modelContourPlot
+      title: Model Contour Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .modelContourPlot
+
+    - name: effectPlot
+      title: Effect Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .effectPlot
+
+    - name: mixtureContourPlot
+      title: Mixture Contour Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .mixtureContourPlot
+...

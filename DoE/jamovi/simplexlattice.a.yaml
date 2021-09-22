@@ -1,0 +1,25 @@
+---
+name:  simplexLattice
+title: Simplex Lattice
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: fac
+      title: Number of factors
+      type: Number
+
+    - name: lev
+      title: Number of levels
+      type: Number
+
+    - name: designPoints
+      title: Design Points Plot
+      type: Bool
+      default: false
+
+...

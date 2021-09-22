@@ -1,0 +1,16 @@
+---
+name:  fullFac
+title: Full Factorial
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+      
+    - name:  text
+      title: Full Factorial
+      type:  Preformatted
+
+...
