@@ -28,8 +28,6 @@ children:
         name: formula
         format: string
         stretchFactor: 6
-      - type: CheckBox
-        name: linRegSwitch
   - type: Label
     label: ANOVA
     children:
@@ -41,30 +39,43 @@ children:
     label: Plots
     children:
       - type: Label
+        label: Normal Q-Q Plot
+        margin: large
+        children:
+          - type: TextBox
+            name: norVar
+            format: string
+            stretchFactor: 6
+      - type: Label
+        label: Main Effects Plot
+        margin: large
+        children:
+          - type: TextBox
+            name: mainEffectsFormula
+            format: string
+            stretchFactor: 6
+      - type: Label
+        label: Interaction Plot
+        margin: large
+        children:
+          - type: TextBox
+            name: interactionFactorX
+            format: string
+            stretchFactor: 6
+          - type: TextBox
+            name: interactionTraceFactor
+            format: string
+            stretchFactor: 6
+          - type: TextBox
+            name: interactionFactorY
+            format: string
+            stretchFactor: 6
+      - type: Label
         label: Pareto Plot
         margin: large
         children:
           - type: CheckBox
             name: paretoSwitch
-      - type: Label
-        label: Normal Plot
-        margin: large
-        children:
-          - type: TextBox
-            name: alpha
-            format: string
-          - type: CheckBox
-            name: isHalfNormal
-          - type: CheckBox
-            name: normalSwitch
-      - type: Label
-        label: Main Effects and Interaction Plot
-        margin: large
-        children:
-          - type: CheckBox
-            name: mainEffectsSwitch
-          - type: CheckBox
-            name: interactionSwitch
       - type: Label
         label: Contour Plot
         margin: large
@@ -73,5 +84,3 @@ children:
             name: contourFormula
             format: string
             stretchFactor: 6
-          - type: CheckBox
-            name: contourSwitch

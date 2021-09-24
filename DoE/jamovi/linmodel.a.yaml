@@ -21,11 +21,6 @@ options:
       title: Dependent Variables
       type: Variables
 
-    - name: linRegSwitch
-      title: Display?
-      type: Bool
-      default: false
-
     - name: formula
       title: Formula
       type: String
@@ -45,42 +40,33 @@ options:
           name: '3'
       default: '2'
 
+    - name: norVar
+      title: Variable
+      type: String
+
+    - name: mainEffectsFormula
+      title: Formula (confidence level = 0.95)
+      type: String
+      
+    - name: interactionFactorX
+      title: Factor X
+      type: String
+
+    - name: interactionTraceFactor
+      title: Trace Factor
+      type: String
+
+    - name: interactionFactorY
+      title: Response
+      type: String
+
     - name: paretoSwitch
       title: Display?
       type: Bool
       default: false
 
-    - name: normalSwitch
-      title: Display?
-      type: Bool
-      default: false
-
-    - name: isHalfNormal
-      title: Half Normal Plot?
-      type: Bool
-      default: true
-
-    - name: alpha
-      title: Significance Level (alpha)
-      type: String
-
-    - name: mainEffectsSwitch
-      title: Main Effects
-      type: Bool
-      default: false
-
-    - name: interactionSwitch
-      title: Interaction Matrix
-      type: Bool
-      default: false
-      
     - name: contourFormula
       title: Formula
       type: String
-
-    - name: contourSwitch
-      title: Display?
-      type: Bool
-      default: false
 
 ...

@@ -17,39 +17,38 @@ items:
       title: ANOVA
       type: Preformatted
 
-    - name: paretoPlot
-      title: Pareto Plot
-      type: Image
-      width: 350
-      height: 350
-      renderFun: .paretoPlot
-
     - name: normalPlot
       title: Normal Plot
       type: Image
-      width: 350
+      width: 450
       height: 350
       renderFun: .normalPlot
 
     - name: mainEffectsPlot
       title: Main Effects Plot
       type: Image
-      width: 350
+      width: 450
       height: 350
       renderFun: .mainEffectsPlot
       
     - name: interactionPlot
       title: Interaction Plot
       type: Image
-      width: 350
+      width: 450
       height: 350
       renderFun: .interactionPlot
-      
+
+    - name: paretoPlot
+      title: Pareto Plot
+      type: Image
+      width: 450
+      height: 350
+      renderFun: .paretoPlot
+
     - name: contourPlot
       title: Contour Plot
       type: Image
-      width: 350
+      width: 450
       height: 350
       renderFun: .contourPlot
-
 ...

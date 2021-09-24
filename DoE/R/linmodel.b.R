@@ -34,6 +34,15 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                     where C is an independent variable and A and B are dependent variables
                                 </li>
                                 <li>Significance Level: 0.05</li>
+                                <li>Main Effects Formula: C ~ A</li>
+                                <li>
+                                    Interaction Plot:
+                                    <ul>
+                                        <li>Factor X: A</li>
+                                        <li>Trace Factor: B</li>
+                                        <li>Reponse: C</li>
+                                    </ul>
+                                </li>
                                 <li>
                                     Contour Formula: ~ A + B (or B ~ A) <br />
                                     where A and B are dependent variables
@@ -57,18 +66,12 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             formula <- as.formula(self$options$formula)
             anovaType <- self$options$anovaType
 
-            linRegSwitch <- self$options$linRegSwitch
             anovaSwitch <- self$options$anovaSwitch
-
             paretoSwitch <- self$options$paretoSwitch
-            normalSwitch <- self$options$normalSwitch
-            contourSwitch <- self$options$contourSwitch
-            mainEffectsSwitch <- self$options$mainEffectsSwitch
-            interactionSwitch <- self$options$interactionSwitch
 
             model <- lm(formula = formula, data = data)
 
-            if (linRegSwitch == TRUE) {
+            if (nchar(self$options$formula) > 0) {
                 self$results$linearReg$setContent( summary(model) )
             }
             
@@ -77,56 +80,51 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 self$results$anova$setContent(anova)
             }
 
+            if (!is.null(self$options$norVar) && nchar(self$options$norVar) > 0) {
+                norVar <- self$options$norVar
+                self$results$normalPlot$setState(data[norVar][[1]])
+            }
+
+            if (!is.null(self$options$mainEffectsFormula) && nchar(self$options$mainEffectsFormula) > 0) {
+                mainEffectsFormula <- as.formula(self$options$mainEffectsFormula)
+                mainEffectsData <- list(data = data, mainEffectsFormula = mainEffectsFormula)
+                self$results$mainEffectsPlot$setState(mainEffectsData)
+            }
+
+            if (!is.null(self$options$interactionFactorX) && nchar(self$options$interactionFactorX) > 0 
+            && !is.null(self$options$interactionTraceFactor) && nchar(self$options$interactionTraceFactor) > 0 
+            && !is.null(self$options$interactionFactorY) && nchar(self$options$interactionFactorY) > 0) {
+                interactionFactorX <- self$options$interactionFactorX
+                interactionTraceFactor <- self$options$interactionTraceFactor
+                interactionFactorY <- self$options$interactionFactorY
+
+                interactionData <- list(
+                    X = data[interactionFactorX][[1]], 
+                    traceFactor = data[interactionTraceFactor][[1]], 
+                    response = data[interactionFactorY][[1]],
+                    xLabel = interactionFactorX,
+                    traceLabel = interactionTraceFactor,
+                    yLabel = paste("mean of", interactionFactorY)
+                )
+                self$results$interactionPlot$setState(interactionData)
+            }
+
             if (paretoSwitch == TRUE) {
                 self$results$paretoPlot$setState(model)
             }
 
-            if (normalSwitch == TRUE) {
-                if (is.null(self$options$alpha) || nchar(self$options$alpha) == 0)
-                    jmvcore::reject("Please enter the significance level in the Normal Plot section")
-
-                alpha <- as.double(self$options$alpha)
-                isHalfNormal <- self$options$isHalfNormal
-                normalData <- list(model = model, alpha = alpha, isHalfNormal = isHalfNormal)
-                self$results$normalPlot$setState(normalData)
-            }
-
-            if (mainEffectsSwitch == TRUE) {
-                self$results$mainEffectsPlot$setState(model)
-            }
-            if (interactionSwitch == TRUE) {
-                self$results$interactionPlot$setState(model)
-            }
-
-            if (is.null(self$options$contourFormula) || nchar(self$options$contourFormula) == 0)
-                return()
-
-            if (contourSwitch == TRUE) {
+            if (!is.null(self$options$contourFormula) && nchar(self$options$contourFormula) > 0) {
                 contourFormula <- as.formula(self$options$contourFormula)
                 contourData <- list(model = model, contourFormula = contourFormula)
                 self$results$contourPlot$setState(contourData)
             }
         },
-        .paretoPlot = function(image, ...) {
-            if (is.null(image$state))
-                return(FALSE)
-
-            plot <- paretoPlot(image$state) 
-            print(plot)
-            TRUE
-        },
         .normalPlot = function(image, ...) {
             if (is.null(image$state))
                 return(FALSE)
 
-            plot <- DanielPlot(
-                image$state$model, 
-                alpha = image$state$alpha, 
-                half = image$state$isHalfNormal,
-                code = TRUE, 
-                autolab = FALSE
-            )
-
+            plot <- qqnorm(image$state)
+            qqline(image$state)
             print(plot)
             TRUE
         },
@@ -134,7 +132,7 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (is.null(image$state))
                 return(FALSE)
 
-            plot <- MEPlot(image$state)
+            plot <- plotmeans(formula = image$state$mainEffectsFormula, data = image$state$data)
             print(plot)
             TRUE
         },
@@ -142,7 +140,23 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (is.null(image$state))
                 return(FALSE)
 
-            plot <- IAPlot(image$state, show.alias=TRUE)
+            plot <- interaction.plot(
+                image$state$X, 
+                image$state$traceFactor,
+                image$state$response, 
+                fun = mean,
+                xlab = image$state$xLabel,
+                trace.label = image$state$traceLabel,
+                ylab = image$state$yLabel
+            )
+            print(plot)
+            TRUE
+        },
+        .paretoPlot = function(image, ...) {
+            if (is.null(image$state))
+                return(FALSE)
+
+            plot <- paretoPlot(image$state) 
             print(plot)
             TRUE
         },
