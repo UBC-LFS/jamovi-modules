@@ -1,7 +1,7 @@
 ---
 title: Design of Experiments in R
 name: DoE
-version: 1.0.1
+version: 1.0.2
 jms: '1.0'
 authors:
   - Brandon Oh

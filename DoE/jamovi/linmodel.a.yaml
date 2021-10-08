@@ -9,26 +9,17 @@ options:
     - name: data
       type: Data
 
-    - name: indep
-      title: Independent Variable
+    - name: dep
+      title: Dependent Variable
       type: Variable
-      suggested:
-        - continuous
-      permitted:
-        - numeric
 
-    - name: deps
-      title: Dependent Variables
+    - name: indeps
+      title: Independent Variables
       type: Variables
 
-    - name: formula
-      title: Formula
-      type: String
-
-    - name: anovaSwitch
-      title: Display?
-      type: Bool
-      default: false
+    - name: modelTerms
+      title: Model Terms
+      type: Terms
 
     - name: anovaType
       title: ANOVA Type

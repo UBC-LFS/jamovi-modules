@@ -6,10 +6,9 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Options,
     public = list(
         initialize = function(
-            indep = NULL,
-            deps = NULL,
-            formula = NULL,
-            anovaSwitch = FALSE,
+            dep = NULL,
+            indeps = NULL,
+            modelTerms = NULL,
             anovaType = "2",
             norVar = NULL,
             mainEffectsFormula = NULL,
@@ -25,23 +24,15 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 requiresData=TRUE,
                 ...)
 
-            private$..indep <- jmvcore::OptionVariable$new(
-                "indep",
-                indep,
-                suggested=list(
-                    "continuous"),
-                permitted=list(
-                    "numeric"))
-            private$..deps <- jmvcore::OptionVariables$new(
-                "deps",
-                deps)
-            private$..formula <- jmvcore::OptionString$new(
-                "formula",
-                formula)
-            private$..anovaSwitch <- jmvcore::OptionBool$new(
-                "anovaSwitch",
-                anovaSwitch,
-                default=FALSE)
+            private$..dep <- jmvcore::OptionVariable$new(
+                "dep",
+                dep)
+            private$..indeps <- jmvcore::OptionVariables$new(
+                "indeps",
+                indeps)
+            private$..modelTerms <- jmvcore::OptionTerms$new(
+                "modelTerms",
+                modelTerms)
             private$..anovaType <- jmvcore::OptionList$new(
                 "anovaType",
                 anovaType,
@@ -72,10 +63,9 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "contourFormula",
                 contourFormula)
 
-            self$.addOption(private$..indep)
-            self$.addOption(private$..deps)
-            self$.addOption(private$..formula)
-            self$.addOption(private$..anovaSwitch)
+            self$.addOption(private$..dep)
+            self$.addOption(private$..indeps)
+            self$.addOption(private$..modelTerms)
             self$.addOption(private$..anovaType)
             self$.addOption(private$..norVar)
             self$.addOption(private$..mainEffectsFormula)
@@ -86,10 +76,9 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..contourFormula)
         }),
     active = list(
-        indep = function() private$..indep$value,
-        deps = function() private$..deps$value,
-        formula = function() private$..formula$value,
-        anovaSwitch = function() private$..anovaSwitch$value,
+        dep = function() private$..dep$value,
+        indeps = function() private$..indeps$value,
+        modelTerms = function() private$..modelTerms$value,
         anovaType = function() private$..anovaType$value,
         norVar = function() private$..norVar$value,
         mainEffectsFormula = function() private$..mainEffectsFormula$value,
@@ -99,10 +88,9 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         paretoSwitch = function() private$..paretoSwitch$value,
         contourFormula = function() private$..contourFormula$value),
     private = list(
-        ..indep = NA,
-        ..deps = NA,
-        ..formula = NA,
-        ..anovaSwitch = NA,
+        ..dep = NA,
+        ..indeps = NA,
+        ..modelTerms = NA,
         ..anovaType = NA,
         ..norVar = NA,
         ..mainEffectsFormula = NA,
@@ -205,10 +193,9 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' 
 #' @param data .
-#' @param indep .
-#' @param deps .
-#' @param formula .
-#' @param anovaSwitch .
+#' @param dep .
+#' @param indeps .
+#' @param modelTerms .
 #' @param anovaType .
 #' @param norVar .
 #' @param mainEffectsFormula .
@@ -232,10 +219,9 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @export
 linModel <- function(
     data,
-    indep,
-    deps,
-    formula,
-    anovaSwitch = FALSE,
+    dep,
+    indeps,
+    modelTerms,
     anovaType = "2",
     norVar,
     mainEffectsFormula,
@@ -248,20 +234,20 @@ linModel <- function(
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("linModel requires jmvcore to be installed (restart may be required)")
 
-    if ( ! missing(indep)) indep <- jmvcore::resolveQuo(jmvcore::enquo(indep))
-    if ( ! missing(deps)) deps <- jmvcore::resolveQuo(jmvcore::enquo(deps))
+    if ( ! missing(dep)) dep <- jmvcore::resolveQuo(jmvcore::enquo(dep))
+    if ( ! missing(indeps)) indeps <- jmvcore::resolveQuo(jmvcore::enquo(indeps))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
-            `if`( ! missing(indep), indep, NULL),
-            `if`( ! missing(deps), deps, NULL))
+            `if`( ! missing(dep), dep, NULL),
+            `if`( ! missing(indeps), indeps, NULL))
 
+    if (inherits(modelTerms, "formula")) modelTerms <- jmvcore::decomposeFormula(modelTerms)
 
     options <- linModelOptions$new(
-        indep = indep,
-        deps = deps,
-        formula = formula,
-        anovaSwitch = anovaSwitch,
+        dep = dep,
+        indeps = indeps,
+        modelTerms = modelTerms,
         anovaType = anovaType,
         norVar = norVar,
         mainEffectsFormula = mainEffectsFormula,

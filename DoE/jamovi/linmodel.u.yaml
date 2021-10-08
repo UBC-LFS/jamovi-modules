@@ -3,38 +3,77 @@ name: linModel
 jus: '3.0'
 stage: 0
 compilerMode: tame
+events:
+  update: './events::update'
 children:
   - type: VariableSupplier
+    name: variablesupplier
     persistentItems: false
     stretchFactor: 1
     children:
       - type: TargetLayoutBox
-        label: Independent Variable
         children:
-          - type: VariablesListBox
-            name: indep
+          - name: dep
+            type: VariablesListBox
+            label: Dependent Variable
+            showColumnHeaders: false
             maxItemCount: 1
+            itemDropBehaviour: overwrite
+            columns:
+              - name: column1
+                label: null
+                stretchFactor: 1
+                template:
+                  type: VariableLabel
             isTarget: true
       - type: TargetLayoutBox
-        label: Dependent Variables
         children:
           - type: VariablesListBox
-            name: deps
+            name: indeps
+            label: Independent Variables
+            showColumnHeaders: false
+            events:
+              change: './events::onChange_indeps'
+            columns:
+              - name: column1
+                label: null
+                stretchFactor: 1
+                template:
+                  type: VariableLabel
             isTarget: true
-  - type: Label
-    label: Linear Regression
+
+  - type: CollapseBox
+    label: Model
+    collapsed: true
+    stretchFactor: 1
     children:
-      - type: TextBox
-        name: formula
-        format: string
-        stretchFactor: 6
+      - type: Supplier
+        name: modelSupplier
+        label: Components
+        persistentItems: true
+        stretchFactor: 1
+        events:
+          update: './events::onUpdate_modelSupplier'
+        children:
+          - type: TargetLayoutBox
+            transferAction: interactions
+            children:
+              - type: ListBox
+                name: modelTerms
+                valueFilter: unique
+                isTarget: true
+                itemDropBehaviour: emptyspace
+                events:
+                  change: './events::onChange_modelTerms'
+                template:
+                    type: TermLabel
+
   - type: Label
     label: ANOVA
     children:
       - type: ComboBox
         name: anovaType
-      - type: CheckBox
-        name: anovaSwitch
+  
   - type: Label
     label: Plots
     children:
@@ -84,3 +123,4 @@ children:
             name: contourFormula
             format: string
             stretchFactor: 6
+

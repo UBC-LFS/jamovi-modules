@@ -28,12 +28,8 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         <br />
                         <div>
                             <h5>Example</h5>
+                            <div>C is an independent variable and A and B are dependent variables.</div>
                             <ul>
-                                <li>
-                                    Linear Regression Formula: C ~ A + B + I(A^2) + I(B^2) + A:B <br />
-                                    where C is an independent variable and A and B are dependent variables
-                                </li>
-                                <li>Significance Level: 0.05</li>
                                 <li>Main Effects Formula: C ~ A</li>
                                 <li>
                                     Interaction Plot:
@@ -43,11 +39,7 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                         <li>Reponse: C</li>
                                     </ul>
                                 </li>
-                                <li>
-                                    Contour Formula: ~ A + B (or B ~ A) <br />
-                                    where A and B are dependent variables
-                                </li>
-                                
+                                <li>Contour Formula: ~ A + B (or B ~ A)</li>
                             </ul>
                             <h5>Note</h5>
                             <ul>
@@ -59,26 +51,23 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>')
         },
         .run = function() {
-            if (is.null(self$options$indep) || is.null(self$options$deps) || is.null(self$options$formula) || nchar(self$options$formula) == 0 || nrow(self$data) < 1)
+            if (is.null(self$options$indeps) || is.null(self$options$dep) || base::identical(self$options$modelTerms, character()) || nrow(self$data) < 1)
                 return()
             
             data <- self$data
-            formula <- as.formula(self$options$formula)
+            
             anovaType <- self$options$anovaType
-
-            anovaSwitch <- self$options$anovaSwitch
             paretoSwitch <- self$options$paretoSwitch
 
-            model <- lm(formula = formula, data = data)
+            data[[self$options$dep]] <- jmvcore::toNumeric(data[[self$options$dep]])
+            formula <- private$.formula()
+            formula <- as.formula(formula)
 
-            if (nchar(self$options$formula) > 0) {
-                self$results$linearReg$setContent( summary(model) )
-            }
-            
-            if (anovaSwitch == TRUE) {
-                anova <- Anova(model, type = anovaType)
-                self$results$anova$setContent(anova)
-            }
+            model <- lm(formula = formula, data = data)
+            self$results$linearReg$setContent( summary(model) )
+
+            anova <- Anova(model, type = anovaType)
+            self$results$anova$setContent(anova)
 
             if (!is.null(self$options$norVar) && nchar(self$options$norVar) > 0) {
                 norVar <- self$options$norVar
@@ -118,6 +107,37 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 contourData <- list(model = model, contourFormula = contourFormula)
                 self$results$contourPlot$setState(contourData)
             }
+        },
+        .formula=function() {
+            terms <- self$options$modelTerms
+            if (is.null(terms))
+                terms <- private$.ff()
+
+            terms <- jmvcore::composeTerms(terms)
+            rhs <- paste0(terms, collapse=' + ')
+            lhs <- jmvcore::composeTerm(self$options$dep)
+            formula <- paste0(lhs, ' ~ ', rhs)
+            formula
+        },
+        .ff=function() {
+            fixedFactors <- self$options$indeps
+
+            if (length(fixedFactors) > 1) {
+                formula <- as.formula(paste('~', paste(paste0('`', fixedFactors, '`'), collapse='*')))
+                terms   <- attr(stats::terms(formula), 'term.labels')
+                modelTerms <- sapply(terms, function(x) as.list(strsplit(x, ':')), USE.NAMES=FALSE)
+            } else {
+                modelTerms <- as.list(fixedFactors)
+            }
+
+            for (i in seq_along(modelTerms)) {
+                term <- modelTerms[[i]]
+                quoted <- grepl('^`.*`$', term)
+                term[quoted] <- substring(term[quoted], 2, nchar(term[quoted])-1)
+                modelTerms[[i]] <- term
+            }
+
+            modelTerms
         },
         .normalPlot = function(image, ...) {
             if (is.null(image$state))
