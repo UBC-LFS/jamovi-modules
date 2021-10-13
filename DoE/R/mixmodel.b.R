@@ -46,26 +46,26 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>')
         },
         .run = function() {
-            if (is.null(self$options$indep) || is.null(self$options$deps) || nrow(self$data) < 1)
+            if (is.null(self$options$dep) || is.null(self$options$indeps) || nrow(self$data) < 1)
                 return()
 
             data <- self$data
-            indep <- self$options$indep
-            deps <- self$options$deps
+            indeps <- self$options$indeps
+            dep <- self$options$dep
             mixModelType <- as.double(self$options$mixModelType)
 
             modelContourPlotSwitch <- self$options$modelContourPlotSwitch
             effectPlotSwitch <- self$options$effectPlotSwitch
             mixtureContourPlotSwitch <- self$options$mixtureContourPlotSwitch
             
-            model <- MixModel(data, indep, deps, mixModelType)
+            model <- MixModel(data, dep, indeps, mixModelType)
             self$results$mixModel$setContent( summary(model) )
 
             if (modelContourPlotSwitch == TRUE) {
                 modelPlotData <- list(
                     model = model,
-                    dimensions = list(x1 = deps[3], x2 = deps[1], x3 = deps[2]), 
-                    cornerLabs = c(deps[3], deps[1], deps[2])
+                    dimensions = list(x1 = indeps[3], x2 = indeps[1], x3 = indeps[2]), 
+                    cornerLabs = c(indeps[3], indeps[1], indeps[2])
                 )
 
                 self$results$modelContourPlot$setState(modelPlotData)
@@ -90,7 +90,7 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             if (mixtureContourPlotSwitch == TRUE) {
                 if (length(self$data) != 4)
-                    jmvcore::reject("One independent variable and three dependent variables are required to display this Mixture Plot")
+                    jmvcore::reject("One dependent variable and three independent variables are required to display this Mixture Plot")
 
                 mixturePlotModelType <- as.double(self$options$mixturePlotModelType)
                 numBreaks <- as.double(self$options$numBreaks)
@@ -102,11 +102,10 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     x2 = tempData$x2,
                     x1 = tempData$x1,
                     y = tempData$y,
-                    cornerLabs = list(x3 = deps[3], x2 = deps[2], x1 = deps[1]), 
+                    cornerLabs = list(x3 = indeps[3], x2 = indeps[2], x1 = indeps[1]), 
                     mod = mixturePlotModelType,
                     numBreaks = numBreaks
                 )
-                #self$results$temp$setContent(mixturePlotData)
                 self$results$mixtureContourPlot$setState(mixturePlotData)
             }
         },

@@ -10,13 +10,12 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             indeps = NULL,
             modelTerms = NULL,
             anovaType = "2",
-            norVar = NULL,
             mainEffectsFormula = NULL,
             interactionFactorX = NULL,
             interactionTraceFactor = NULL,
             interactionFactorY = NULL,
-            paretoSwitch = FALSE,
-            contourFormula = NULL, ...) {
+            contourFormula = NULL,
+            norVar = NULL, ...) {
 
             super$initialize(
                 package="DoE",
@@ -26,7 +25,11 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
             private$..dep <- jmvcore::OptionVariable$new(
                 "dep",
-                dep)
+                dep,
+                suggested=list(
+                    "continuous"),
+                permitted=list(
+                    "numeric"))
             private$..indeps <- jmvcore::OptionVariables$new(
                 "indeps",
                 indeps)
@@ -40,9 +43,6 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "2",
                     "3"),
                 default="2")
-            private$..norVar <- jmvcore::OptionString$new(
-                "norVar",
-                norVar)
             private$..mainEffectsFormula <- jmvcore::OptionString$new(
                 "mainEffectsFormula",
                 mainEffectsFormula)
@@ -55,50 +55,46 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..interactionFactorY <- jmvcore::OptionString$new(
                 "interactionFactorY",
                 interactionFactorY)
-            private$..paretoSwitch <- jmvcore::OptionBool$new(
-                "paretoSwitch",
-                paretoSwitch,
-                default=FALSE)
             private$..contourFormula <- jmvcore::OptionString$new(
                 "contourFormula",
                 contourFormula)
+            private$..norVar <- jmvcore::OptionString$new(
+                "norVar",
+                norVar)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..indeps)
             self$.addOption(private$..modelTerms)
             self$.addOption(private$..anovaType)
-            self$.addOption(private$..norVar)
             self$.addOption(private$..mainEffectsFormula)
             self$.addOption(private$..interactionFactorX)
             self$.addOption(private$..interactionTraceFactor)
             self$.addOption(private$..interactionFactorY)
-            self$.addOption(private$..paretoSwitch)
             self$.addOption(private$..contourFormula)
+            self$.addOption(private$..norVar)
         }),
     active = list(
         dep = function() private$..dep$value,
         indeps = function() private$..indeps$value,
         modelTerms = function() private$..modelTerms$value,
         anovaType = function() private$..anovaType$value,
-        norVar = function() private$..norVar$value,
         mainEffectsFormula = function() private$..mainEffectsFormula$value,
         interactionFactorX = function() private$..interactionFactorX$value,
         interactionTraceFactor = function() private$..interactionTraceFactor$value,
         interactionFactorY = function() private$..interactionFactorY$value,
-        paretoSwitch = function() private$..paretoSwitch$value,
-        contourFormula = function() private$..contourFormula$value),
+        contourFormula = function() private$..contourFormula$value,
+        norVar = function() private$..norVar$value),
     private = list(
         ..dep = NA,
         ..indeps = NA,
         ..modelTerms = NA,
         ..anovaType = NA,
-        ..norVar = NA,
         ..mainEffectsFormula = NA,
         ..interactionFactorX = NA,
         ..interactionTraceFactor = NA,
         ..interactionFactorY = NA,
-        ..paretoSwitch = NA,
-        ..contourFormula = NA)
+        ..contourFormula = NA,
+        ..norVar = NA)
 )
 
 linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -108,11 +104,12 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         usage = function() private$.items[["usage"]],
         linearReg = function() private$.items[["linearReg"]],
         anova = function() private$.items[["anova"]],
-        normalPlot = function() private$.items[["normalPlot"]],
+        factorLevels = function() private$.items[["factorLevels"]],
+        paretoPlot = function() private$.items[["paretoPlot"]],
         mainEffectsPlot = function() private$.items[["mainEffectsPlot"]],
         interactionPlot = function() private$.items[["interactionPlot"]],
-        paretoPlot = function() private$.items[["paretoPlot"]],
-        contourPlot = function() private$.items[["contourPlot"]]),
+        contourPlot = function() private$.items[["contourPlot"]],
+        normalPlot = function() private$.items[["normalPlot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -133,13 +130,17 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="anova",
                 title="ANOVA"))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="factorLevels",
+                title="Factor Levels"))
             self$add(jmvcore::Image$new(
                 options=options,
-                name="normalPlot",
-                title="Normal Plot",
+                name="paretoPlot",
+                title="Pareto Plot",
                 width=450,
                 height=350,
-                renderFun=".normalPlot"))
+                renderFun=".paretoPlot"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="mainEffectsPlot",
@@ -156,18 +157,18 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".interactionPlot"))
             self$add(jmvcore::Image$new(
                 options=options,
-                name="paretoPlot",
-                title="Pareto Plot",
-                width=450,
-                height=350,
-                renderFun=".paretoPlot"))
-            self$add(jmvcore::Image$new(
-                options=options,
                 name="contourPlot",
                 title="Contour Plot",
                 width=450,
                 height=350,
-                renderFun=".contourPlot"))}))
+                renderFun=".contourPlot"))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="normalPlot",
+                title="Normal Plot",
+                width=450,
+                height=350,
+                renderFun=".normalPlot"))}))
 
 linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "linModelBase",
@@ -197,23 +198,23 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param indeps .
 #' @param modelTerms .
 #' @param anovaType .
-#' @param norVar .
 #' @param mainEffectsFormula .
 #' @param interactionFactorX .
 #' @param interactionTraceFactor .
 #' @param interactionFactorY .
-#' @param paretoSwitch .
 #' @param contourFormula .
+#' @param norVar .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$usage} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$linearReg} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$anova} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$normalPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$factorLevels} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$paretoPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$mainEffectsPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$interactionPlot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$paretoPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$contourPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$normalPlot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' @export
@@ -223,13 +224,12 @@ linModel <- function(
     indeps,
     modelTerms,
     anovaType = "2",
-    norVar,
     mainEffectsFormula,
     interactionFactorX,
     interactionTraceFactor,
     interactionFactorY,
-    paretoSwitch = FALSE,
-    contourFormula) {
+    contourFormula,
+    norVar) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("linModel requires jmvcore to be installed (restart may be required)")
@@ -249,13 +249,12 @@ linModel <- function(
         indeps = indeps,
         modelTerms = modelTerms,
         anovaType = anovaType,
-        norVar = norVar,
         mainEffectsFormula = mainEffectsFormula,
         interactionFactorX = interactionFactorX,
         interactionTraceFactor = interactionTraceFactor,
         interactionFactorY = interactionFactorY,
-        paretoSwitch = paretoSwitch,
-        contourFormula = contourFormula)
+        contourFormula = contourFormula,
+        norVar = norVar)
 
     analysis <- linModelClass$new(
         options = options,

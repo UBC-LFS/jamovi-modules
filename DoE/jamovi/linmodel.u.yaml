@@ -44,7 +44,7 @@ children:
 
   - type: CollapseBox
     label: Model
-    collapsed: true
+    collapsed: false
     stretchFactor: 1
     children:
       - type: Supplier
@@ -67,24 +67,14 @@ children:
                   change: './events::onChange_modelTerms'
                 template:
                     type: TermLabel
-
   - type: Label
     label: ANOVA
     children:
       - type: ComboBox
         name: anovaType
-  
   - type: Label
     label: Plots
     children:
-      - type: Label
-        label: Normal Q-Q Plot
-        margin: large
-        children:
-          - type: TextBox
-            name: norVar
-            format: string
-            stretchFactor: 6
       - type: Label
         label: Main Effects Plot
         margin: large
@@ -110,12 +100,6 @@ children:
             format: string
             stretchFactor: 6
       - type: Label
-        label: Pareto Plot
-        margin: large
-        children:
-          - type: CheckBox
-            name: paretoSwitch
-      - type: Label
         label: Contour Plot
         margin: large
         children:
@@ -123,4 +107,11 @@ children:
             name: contourFormula
             format: string
             stretchFactor: 6
-
+      - type: Label
+        label: Normal Q-Q Plot
+        margin: large
+        children:
+          - type: TextBox
+            name: norVar
+            format: string
+            stretchFactor: 6

@@ -9,15 +9,15 @@ options:
     - name: data
       type: Data
 
-    - name: indep
-      title: Independent Variable
+    - name: dep
+      title: dependent Variable
       type: Variable
       suggested:
         - continuous
       permitted:
         - numeric
-    - name: deps
-      title: Dependent Variables
+    - name: indeps
+      title: Independent Variables
       type: Variables
 
     - name: mixModelType

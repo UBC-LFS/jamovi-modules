@@ -28,7 +28,9 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         <br />
                         <div>
                             <h5>Example</h5>
-                            <div>C is an independent variable and A and B are dependent variables.</div>
+                            <div>
+                                C is an independent variable and A and B are dependent variables, and squared terms would be <strong>AA</strong> and <strong>BB</strong>.
+                            </div>
                             <ul>
                                 <li>Main Effects Formula: C ~ A</li>
                                 <li>
@@ -51,14 +53,14 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>')
         },
         .run = function() {
-            if (is.null(self$options$indeps) || is.null(self$options$dep) || base::identical(self$options$modelTerms, character()) || nrow(self$data) < 1)
+            if (is.null(self$options$dep) || is.null(self$options$indeps) || base::identical(self$options$modelTerms, character()) || nrow(self$data) < 1)
                 return()
             
             data <- self$data
-            
             anovaType <- self$options$anovaType
-            paretoSwitch <- self$options$paretoSwitch
 
+            # Make a formula
+            # Reference: https://github.com/jamovi/jmvbaseR/blob/master/R/regression.b.R
             data[[self$options$dep]] <- jmvcore::toNumeric(data[[self$options$dep]])
             formula <- private$.formula()
             formula <- as.formula(formula)
@@ -68,6 +70,21 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             anova <- Anova(model, type = anovaType)
             self$results$anova$setContent(anova)
+
+            # Make factor levels
+            # Reference: https://github.com/cran/pid/blob/master/R/paretoPlot.R
+            coef(model)
+            coeff.full <- coef(model)[2:length(coef(model))]
+            coeff.full <- na.omit(coeff.full)
+            coeff.abs <- unname(abs(coeff.full))
+            coeff <- sort(coeff.abs, index.return = TRUE, method = "shell")
+
+            temp <- names(coeff.full)[coeff$ix]
+            fnames <- factor(temp, levels = temp, ordered = TRUE)
+
+            self$results$factorLevels$setContent(fnames)
+
+            self$results$paretoPlot$setState(model)
 
             if (!is.null(self$options$norVar) && nchar(self$options$norVar) > 0) {
                 norVar <- self$options$norVar
@@ -96,10 +113,6 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     yLabel = paste("mean of", interactionFactorY)
                 )
                 self$results$interactionPlot$setState(interactionData)
-            }
-
-            if (paretoSwitch == TRUE) {
-                self$results$paretoPlot$setState(model)
             }
 
             if (!is.null(self$options$contourFormula) && nchar(self$options$contourFormula) > 0) {
@@ -139,12 +152,11 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             modelTerms
         },
-        .normalPlot = function(image, ...) {
+        .paretoPlot = function(image, ...) {
             if (is.null(image$state))
                 return(FALSE)
 
-            plot <- qqnorm(image$state)
-            qqline(image$state)
+            plot <- paretoPlot(image$state) 
             print(plot)
             TRUE
         },
@@ -172,19 +184,20 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             print(plot)
             TRUE
         },
-        .paretoPlot = function(image, ...) {
-            if (is.null(image$state))
-                return(FALSE)
-
-            plot <- paretoPlot(image$state) 
-            print(plot)
-            TRUE
-        },
         .contourPlot = function(image, ...) {
             if (is.null(image$state))
                 return(FALSE)
 
             plot <- contour(image$state$model, image$state$contourFormula, image = TRUE) 
+            print(plot)
+            TRUE
+        },
+        .normalPlot = function(image, ...) {
+            if (is.null(image$state))
+                return(FALSE)
+
+            plot <- qqnorm(image$state)
+            qqline(image$state)
             print(plot)
             TRUE
         }

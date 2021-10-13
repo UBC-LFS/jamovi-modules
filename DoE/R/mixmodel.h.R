@@ -6,8 +6,8 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Options,
     public = list(
         initialize = function(
-            indep = NULL,
-            deps = NULL,
+            dep = NULL,
+            indeps = NULL,
             mixModelType = "2",
             modelContourPlotSwitch = FALSE,
             effectPlotModelType = "2",
@@ -25,16 +25,16 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 requiresData=TRUE,
                 ...)
 
-            private$..indep <- jmvcore::OptionVariable$new(
-                "indep",
-                indep,
+            private$..dep <- jmvcore::OptionVariable$new(
+                "dep",
+                dep,
                 suggested=list(
                     "continuous"),
                 permitted=list(
                     "numeric"))
-            private$..deps <- jmvcore::OptionVariables$new(
-                "deps",
-                deps)
+            private$..indeps <- jmvcore::OptionVariables$new(
+                "indeps",
+                indeps)
             private$..mixModelType <- jmvcore::OptionList$new(
                 "mixModelType",
                 mixModelType,
@@ -97,8 +97,8 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 mixtureContourPlotSwitch,
                 default=FALSE)
 
-            self$.addOption(private$..indep)
-            self$.addOption(private$..deps)
+            self$.addOption(private$..dep)
+            self$.addOption(private$..indeps)
             self$.addOption(private$..mixModelType)
             self$.addOption(private$..modelContourPlotSwitch)
             self$.addOption(private$..effectPlotModelType)
@@ -111,8 +111,8 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..mixtureContourPlotSwitch)
         }),
     active = list(
-        indep = function() private$..indep$value,
-        deps = function() private$..deps$value,
+        dep = function() private$..dep$value,
+        indeps = function() private$..indeps$value,
         mixModelType = function() private$..mixModelType$value,
         modelContourPlotSwitch = function() private$..modelContourPlotSwitch$value,
         effectPlotModelType = function() private$..effectPlotModelType$value,
@@ -124,8 +124,8 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         numBreaks = function() private$..numBreaks$value,
         mixtureContourPlotSwitch = function() private$..mixtureContourPlotSwitch$value),
     private = list(
-        ..indep = NA,
-        ..deps = NA,
+        ..dep = NA,
+        ..indeps = NA,
         ..mixModelType = NA,
         ..modelContourPlotSwitch = NA,
         ..effectPlotModelType = NA,
@@ -209,8 +209,8 @@ mixModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' 
 #' @param data .
-#' @param indep .
-#' @param deps .
+#' @param dep .
+#' @param indeps .
 #' @param mixModelType .
 #' @param modelContourPlotSwitch .
 #' @param effectPlotModelType .
@@ -233,8 +233,8 @@ mixModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @export
 mixModel <- function(
     data,
-    indep,
-    deps,
+    dep,
+    indeps,
     mixModelType = "2",
     modelContourPlotSwitch = FALSE,
     effectPlotModelType = "2",
@@ -249,18 +249,18 @@ mixModel <- function(
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("mixModel requires jmvcore to be installed (restart may be required)")
 
-    if ( ! missing(indep)) indep <- jmvcore::resolveQuo(jmvcore::enquo(indep))
-    if ( ! missing(deps)) deps <- jmvcore::resolveQuo(jmvcore::enquo(deps))
+    if ( ! missing(dep)) dep <- jmvcore::resolveQuo(jmvcore::enquo(dep))
+    if ( ! missing(indeps)) indeps <- jmvcore::resolveQuo(jmvcore::enquo(indeps))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
-            `if`( ! missing(indep), indep, NULL),
-            `if`( ! missing(deps), deps, NULL))
+            `if`( ! missing(dep), dep, NULL),
+            `if`( ! missing(indeps), indeps, NULL))
 
 
     options <- mixModelOptions$new(
-        indep = indep,
-        deps = deps,
+        dep = dep,
+        indeps = indeps,
         mixModelType = mixModelType,
         modelContourPlotSwitch = modelContourPlotSwitch,
         effectPlotModelType = effectPlotModelType,

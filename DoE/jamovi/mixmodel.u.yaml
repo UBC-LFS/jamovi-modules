@@ -9,17 +9,17 @@ children:
     stretchFactor: 1
     children:
       - type: TargetLayoutBox
-        label: Independent Variable
+        label: dependent Variable
         children:
           - type: VariablesListBox
-            name: indep
+            name: dep
             maxItemCount: 1
             isTarget: true
       - type: TargetLayoutBox
-        label: Dependent Variables
+        label: Independent Variables
         children:
           - type: VariablesListBox
-            name: deps
+            name: indeps
             isTarget: true
   - type: Label
     label: Base Settings
@@ -59,4 +59,3 @@ children:
             format: number
           - type: CheckBox
             name: mixtureContourPlotSwitch
-  

@@ -1,4 +1,4 @@
-// Reference: https://github.com/jamovi/jmvbaseR
+// Reference: https://github.com/jamovi/jmvbaseR/blob/master/jamovi/js/anova.events.js
 
 const events = {
     update: function(ui) {
