@@ -17,20 +17,16 @@ items:
       title: ANOVA
       type: Preformatted
 
-    - name: resTableMeans
-      title: Response Table for Means
-      type: Preformatted
-
-    - name: factorLevels
-      title: Factor Levels
-      type: Preformatted
-
     - name: paretoPlot
       title: Pareto Plot
       type: Image
       width: 450
       height: 350
       renderFun: .paretoPlot
+
+    - name: resTableMeans
+      title: Response Table for Means
+      type: Preformatted
 
     - name: mainEffectsPlot
       title: Main Effects Plot

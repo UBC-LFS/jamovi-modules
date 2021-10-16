@@ -118,9 +118,8 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         usage = function() private$.items[["usage"]],
         linearReg = function() private$.items[["linearReg"]],
         anova = function() private$.items[["anova"]],
-        resTableMeans = function() private$.items[["resTableMeans"]],
-        factorLevels = function() private$.items[["factorLevels"]],
         paretoPlot = function() private$.items[["paretoPlot"]],
+        resTableMeans = function() private$.items[["resTableMeans"]],
         mainEffectsPlot = function() private$.items[["mainEffectsPlot"]],
         interactionPlot = function() private$.items[["interactionPlot"]],
         contourPlot = function() private$.items[["contourPlot"]],
@@ -145,14 +144,6 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="anova",
                 title="ANOVA"))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="resTableMeans",
-                title="Response Table for Means"))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="factorLevels",
-                title="Factor Levels"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="paretoPlot",
@@ -160,6 +151,10 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=450,
                 height=350,
                 renderFun=".paretoPlot"))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="resTableMeans",
+                title="Response Table for Means"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="mainEffectsPlot",
@@ -230,9 +225,8 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$usage} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$linearReg} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$anova} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$resTableMeans} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$factorLevels} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$paretoPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$resTableMeans} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$mainEffectsPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$interactionPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$contourPlot} \tab \tab \tab \tab \tab an image \cr

@@ -75,16 +75,16 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             # Make factor levels
             # Reference: https://github.com/cran/pid/blob/master/R/paretoPlot.R
-            coef(model)
-            coeff.full <- coef(model)[2:length(coef(model))]
-            coeff.full <- na.omit(coeff.full)
-            coeff.abs <- unname(abs(coeff.full))
-            coeff <- sort(coeff.abs, index.return = TRUE, method = "shell")
+            # coef(model)
+            # coeff.full <- coef(model)[2:length(coef(model))]
+            # coeff.full <- na.omit(coeff.full)
+            # coeff.abs <- unname(abs(coeff.full))
+            # coeff <- sort(coeff.abs, index.return = TRUE, method = "shell")
 
-            temp <- names(coeff.full)[coeff$ix]
-            fnames <- factor(temp, levels = temp, ordered = TRUE)
+            # temp <- names(coeff.full)[coeff$ix]
+            # fnames <- factor(temp, levels = temp, ordered = TRUE)
 
-            self$results$factorLevels$setContent(fnames)
+            # self$results$factorLevels$setContent(fnames)
             self$results$paretoPlot$setState(model)
 
             # Make factor ranks
@@ -92,8 +92,6 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 resVars = strsplit(self$options$resVars, ',')[[1]]
                 df <- data.frame(data)
                 
-                #numResVars <- length(resVars)
-                #totalRows <- length(as.numeric(unlist(df[1])))
                 numUniqueItems <- length(as.character(unlist(unique(df[1]))))
                 
                 dataList <- list()
