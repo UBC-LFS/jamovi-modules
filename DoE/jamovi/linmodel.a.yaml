@@ -21,6 +21,10 @@ options:
       title: Independent Variables
       type: Variables
 
+    - name: moreVars
+      title: More Variables
+      type: Variables
+
     - name: modelTerms
       title: Model Terms
       type: Terms
@@ -34,6 +38,10 @@ options:
         - title: III
           name: '3'
       default: '2'
+
+    - name: resVars
+      title: Response Variables
+      type: String
 
     - name: mainEffectsFormula
       title: Formula (confidence level = 0.95)

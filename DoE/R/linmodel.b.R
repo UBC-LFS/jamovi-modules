@@ -55,13 +55,15 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         .run = function() {
             if (is.null(self$options$dep) || is.null(self$options$indeps) || base::identical(self$options$modelTerms, character()) || nrow(self$data) < 1)
                 return()
-            
+
             data <- self$data
+            dep <- self$options$dep
+            indeps <- self$options$indeps
             anovaType <- self$options$anovaType
 
             # Make a formula
             # Reference: https://github.com/jamovi/jmvbaseR/blob/master/R/regression.b.R
-            data[[self$options$dep]] <- jmvcore::toNumeric(data[[self$options$dep]])
+            data[[dep]] <- jmvcore::toNumeric(data[[dep]])
             formula <- private$.formula()
             formula <- as.formula(formula)
 
@@ -83,8 +85,54 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             fnames <- factor(temp, levels = temp, ordered = TRUE)
 
             self$results$factorLevels$setContent(fnames)
-
             self$results$paretoPlot$setState(model)
+
+            # Make factor ranks
+            if (!is.null(self$options$resVars) && nchar(self$options$resVars) > 0) {
+                resVars = strsplit(self$options$resVars, ',')[[1]]
+                df <- data.frame(data)
+                
+                #numResVars <- length(resVars)
+                #totalRows <- length(as.numeric(unlist(df[1])))
+                numUniqueItems <- length(as.character(unlist(unique(df[1]))))
+                
+                dataList <- list()
+                deltas <- vector()
+                temp <- vector()
+                for (i in 1:length(indeps)) {
+                    by <- as.character(unlist(df[indeps[i]]))
+                    y <- as.data.frame(by, stringsAsFactors = FALSE)
+                    splited <- split(df, y)
+                    temp <- c(temp, splited)
+                    
+                    temp <- vector()
+                    for (j in 1:length(splited)) {
+                        selected <- select(splited[[j]], resVars)
+                        merged <- lapply(selected, sum)
+                        summed <- colSums(do.call(rbind, merged))
+                        result <- summed / (length(splited[[j]]) * length(resVars))
+                        temp <- c(temp, result)
+                    }
+                    
+                    delta <- max(temp) - min(temp)
+                    deltas <- c(deltas, delta)
+                    dataList[[indeps[i]]] <- c(temp, delta)
+                }
+
+                meanTable <- data.frame(dataList)
+                ranks <- rank(-deltas)
+
+                result <- rbind(meanTable, ranks)
+                
+                rowNames <- vector()
+                for (i in 1:numUniqueItems) {
+                    rowNames <- c(rowNames, paste("Level", i))
+                }
+                rowNames <- c(rowNames, c("Delta", "Rank"))
+                row.names(result) <- rowNames
+
+                self$results$resTableMeans$setContent(result)
+            }
 
             if (!is.null(self$options$norVar) && nchar(self$options$norVar) > 0) {
                 norVar <- self$options$norVar

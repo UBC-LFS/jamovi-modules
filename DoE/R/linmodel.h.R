@@ -8,8 +8,10 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         initialize = function(
             dep = NULL,
             indeps = NULL,
+            moreVars = NULL,
             modelTerms = NULL,
             anovaType = "2",
+            resVars = NULL,
             mainEffectsFormula = NULL,
             interactionFactorX = NULL,
             interactionTraceFactor = NULL,
@@ -33,6 +35,9 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..indeps <- jmvcore::OptionVariables$new(
                 "indeps",
                 indeps)
+            private$..moreVars <- jmvcore::OptionVariables$new(
+                "moreVars",
+                moreVars)
             private$..modelTerms <- jmvcore::OptionTerms$new(
                 "modelTerms",
                 modelTerms)
@@ -43,6 +48,9 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "2",
                     "3"),
                 default="2")
+            private$..resVars <- jmvcore::OptionString$new(
+                "resVars",
+                resVars)
             private$..mainEffectsFormula <- jmvcore::OptionString$new(
                 "mainEffectsFormula",
                 mainEffectsFormula)
@@ -64,8 +72,10 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
             self$.addOption(private$..dep)
             self$.addOption(private$..indeps)
+            self$.addOption(private$..moreVars)
             self$.addOption(private$..modelTerms)
             self$.addOption(private$..anovaType)
+            self$.addOption(private$..resVars)
             self$.addOption(private$..mainEffectsFormula)
             self$.addOption(private$..interactionFactorX)
             self$.addOption(private$..interactionTraceFactor)
@@ -76,8 +86,10 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         dep = function() private$..dep$value,
         indeps = function() private$..indeps$value,
+        moreVars = function() private$..moreVars$value,
         modelTerms = function() private$..modelTerms$value,
         anovaType = function() private$..anovaType$value,
+        resVars = function() private$..resVars$value,
         mainEffectsFormula = function() private$..mainEffectsFormula$value,
         interactionFactorX = function() private$..interactionFactorX$value,
         interactionTraceFactor = function() private$..interactionTraceFactor$value,
@@ -87,8 +99,10 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     private = list(
         ..dep = NA,
         ..indeps = NA,
+        ..moreVars = NA,
         ..modelTerms = NA,
         ..anovaType = NA,
+        ..resVars = NA,
         ..mainEffectsFormula = NA,
         ..interactionFactorX = NA,
         ..interactionTraceFactor = NA,
@@ -104,6 +118,7 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         usage = function() private$.items[["usage"]],
         linearReg = function() private$.items[["linearReg"]],
         anova = function() private$.items[["anova"]],
+        resTableMeans = function() private$.items[["resTableMeans"]],
         factorLevels = function() private$.items[["factorLevels"]],
         paretoPlot = function() private$.items[["paretoPlot"]],
         mainEffectsPlot = function() private$.items[["mainEffectsPlot"]],
@@ -130,6 +145,10 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="anova",
                 title="ANOVA"))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="resTableMeans",
+                title="Response Table for Means"))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="factorLevels",
@@ -196,8 +215,10 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param data .
 #' @param dep .
 #' @param indeps .
+#' @param moreVars .
 #' @param modelTerms .
 #' @param anovaType .
+#' @param resVars .
 #' @param mainEffectsFormula .
 #' @param interactionFactorX .
 #' @param interactionTraceFactor .
@@ -209,6 +230,7 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$usage} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$linearReg} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$anova} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$resTableMeans} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$factorLevels} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$paretoPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$mainEffectsPlot} \tab \tab \tab \tab \tab an image \cr
@@ -222,8 +244,10 @@ linModel <- function(
     data,
     dep,
     indeps,
+    moreVars,
     modelTerms,
     anovaType = "2",
+    resVars,
     mainEffectsFormula,
     interactionFactorX,
     interactionTraceFactor,
@@ -236,19 +260,23 @@ linModel <- function(
 
     if ( ! missing(dep)) dep <- jmvcore::resolveQuo(jmvcore::enquo(dep))
     if ( ! missing(indeps)) indeps <- jmvcore::resolveQuo(jmvcore::enquo(indeps))
+    if ( ! missing(moreVars)) moreVars <- jmvcore::resolveQuo(jmvcore::enquo(moreVars))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
             `if`( ! missing(dep), dep, NULL),
-            `if`( ! missing(indeps), indeps, NULL))
+            `if`( ! missing(indeps), indeps, NULL),
+            `if`( ! missing(moreVars), moreVars, NULL))
 
     if (inherits(modelTerms, "formula")) modelTerms <- jmvcore::decomposeFormula(modelTerms)
 
     options <- linModelOptions$new(
         dep = dep,
         indeps = indeps,
+        moreVars = moreVars,
         modelTerms = modelTerms,
         anovaType = anovaType,
+        resVars = resVars,
         mainEffectsFormula = mainEffectsFormula,
         interactionFactorX = interactionFactorX,
         interactionTraceFactor = interactionTraceFactor,

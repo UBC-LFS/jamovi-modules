@@ -41,6 +41,19 @@ children:
                 template:
                   type: VariableLabel
             isTarget: true
+      - type: TargetLayoutBox
+        children:
+          - type: VariablesListBox
+            name: moreVars
+            label: More Variables
+            showColumnHeaders: false
+            columns:
+              - name: column1
+                label: null
+                stretchFactor: 1
+                template:
+                  type: VariableLabel
+            isTarget: true
 
   - type: CollapseBox
     label: Model
@@ -72,6 +85,13 @@ children:
     children:
       - type: ComboBox
         name: anovaType
+  - type: Label
+    label: Response Table for Means
+    children:
+      - type: TextBox
+        name: resVars
+        format: string
+        stretchFactor: 6
   - type: Label
     label: Plots
     children:

@@ -17,6 +17,10 @@ items:
       title: ANOVA
       type: Preformatted
 
+    - name: resTableMeans
+      title: Response Table for Means
+      type: Preformatted
+
     - name: factorLevels
       title: Factor Levels
       type: Preformatted
