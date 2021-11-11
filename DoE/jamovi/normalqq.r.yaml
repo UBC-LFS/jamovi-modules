@@ -1,0 +1,18 @@
+---
+name:  normalQQ
+title: Normal QQ Plot
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+
+    - name: normalQQPlot
+      title: Normal QQ Plot
+      type: Image
+      width: 450
+      height: 350
+      renderFun: .normalQQPlot
+...

@@ -26,7 +26,7 @@ children:
         format: string
         stretchFactor: 6
       - type: TextBox
-        name: defaultLevels
+        name: eachDefaultLevels
         format: string
         stretchFactor: 6
   - type: Label

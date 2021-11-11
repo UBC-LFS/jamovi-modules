@@ -37,8 +37,8 @@ options:
       title: Name of factors
       type: String
 
-    - name: defaultLevels
-      title: Default levels
+    - name: eachDefaultLevels
+      title: Each of default levels
       type: String
 
     - name: numberBlocks

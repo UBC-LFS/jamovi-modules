@@ -11,7 +11,7 @@ centralCompOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             alpha = "rotatable",
             numberFactors = NULL,
             nameFactors = NULL,
-            defaultLevels = NULL,
+            eachDefaultLevels = NULL,
             numberBlocks = 1,
             nameBlocks = "Blocks",
             replications = 1,
@@ -45,9 +45,9 @@ centralCompOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             private$..nameFactors <- jmvcore::OptionString$new(
                 "nameFactors",
                 nameFactors)
-            private$..defaultLevels <- jmvcore::OptionString$new(
-                "defaultLevels",
-                defaultLevels)
+            private$..eachDefaultLevels <- jmvcore::OptionString$new(
+                "eachDefaultLevels",
+                eachDefaultLevels)
             private$..numberBlocks <- jmvcore::OptionInteger$new(
                 "numberBlocks",
                 numberBlocks,
@@ -77,7 +77,7 @@ centralCompOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..alpha)
             self$.addOption(private$..numberFactors)
             self$.addOption(private$..nameFactors)
-            self$.addOption(private$..defaultLevels)
+            self$.addOption(private$..eachDefaultLevels)
             self$.addOption(private$..numberBlocks)
             self$.addOption(private$..nameBlocks)
             self$.addOption(private$..replications)
@@ -91,7 +91,7 @@ centralCompOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         alpha = function() private$..alpha$value,
         numberFactors = function() private$..numberFactors$value,
         nameFactors = function() private$..nameFactors$value,
-        defaultLevels = function() private$..defaultLevels$value,
+        eachDefaultLevels = function() private$..eachDefaultLevels$value,
         numberBlocks = function() private$..numberBlocks$value,
         nameBlocks = function() private$..nameBlocks$value,
         replications = function() private$..replications$value,
@@ -104,7 +104,7 @@ centralCompOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..alpha = NA,
         ..numberFactors = NA,
         ..nameFactors = NA,
-        ..defaultLevels = NA,
+        ..eachDefaultLevels = NA,
         ..numberBlocks = NA,
         ..nameBlocks = NA,
         ..replications = NA,
@@ -165,7 +165,7 @@ centralCompBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param alpha .
 #' @param numberFactors .
 #' @param nameFactors .
-#' @param defaultLevels .
+#' @param eachDefaultLevels .
 #' @param numberBlocks .
 #' @param nameBlocks .
 #' @param replications .
@@ -186,7 +186,7 @@ centralComp <- function(
     alpha = "rotatable",
     numberFactors,
     nameFactors,
-    defaultLevels,
+    eachDefaultLevels,
     numberBlocks = 1,
     nameBlocks = "Blocks",
     replications = 1,
@@ -208,7 +208,7 @@ centralComp <- function(
         alpha = alpha,
         numberFactors = numberFactors,
         nameFactors = nameFactors,
-        defaultLevels = defaultLevels,
+        eachDefaultLevels = eachDefaultLevels,
         numberBlocks = numberBlocks,
         nameBlocks = nameBlocks,
         replications = replications,

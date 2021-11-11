@@ -1,0 +1,25 @@
+---
+name:  mainEffectsInteraction
+title: Main Effects and Interaction Plots
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+      
+    - name: mainEffectsPlot
+      title: Main Effects Plot
+      type: Image
+      width: 450
+      height: 350
+      renderFun: .mainEffectsPlot
+      
+    - name: interactionPlot
+      title: Interaction Plot
+      type: Image
+      width: 450
+      height: 350
+      renderFun: .interactionPlot
+...

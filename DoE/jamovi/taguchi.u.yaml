@@ -18,6 +18,10 @@ children:
         name: numberFactorLevels
         format: number
       - type: TextBox
+        name: eachColumnIndex
+        format: string
+        stretchFactor: 6
+      - type: TextBox
         name: eachFactorLevels
         format: string
         stretchFactor: 6

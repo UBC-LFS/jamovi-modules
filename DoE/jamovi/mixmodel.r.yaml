@@ -12,6 +12,20 @@ items:
     - name: mixModel
       title: Mixture Model
       type: Preformatted
+      
+    - name: mixtureContourPlot
+      title: Mixture Contour Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .mixtureContourPlot
+
+    - name: effectPlot
+      title: Mixture Effect Plot
+      type: Image
+      width: 350
+      height: 350
+      renderFun: .effectPlot
 
     - name: modelContourPlot
       title: Model Contour Plot
@@ -19,18 +33,4 @@ items:
       width: 350
       height: 350
       renderFun: .modelContourPlot
-
-    - name: effectPlot
-      title: Effect Plot
-      type: Image
-      width: 350
-      height: 350
-      renderFun: .effectPlot
-
-    - name: mixtureContourPlot
-      title: Mixture Contour Plot
-      type: Image
-      width: 350
-      height: 350
-      renderFun: .mixtureContourPlot
 ...

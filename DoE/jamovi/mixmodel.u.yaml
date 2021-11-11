@@ -9,7 +9,7 @@ children:
     stretchFactor: 1
     children:
       - type: TargetLayoutBox
-        label: dependent Variable
+        label: Dependent Variable
         children:
           - type: VariablesListBox
             name: dep
@@ -30,12 +30,17 @@ children:
     label: Plots
     children:
       - type: Label
-        label: Model Contour Plot
+        label: Mixture Contour Plot
         children:
+          - type: ComboBox
+            name: mixturePlotModelType
+          - type: TextBox
+            name: numBreaks
+            format: number
           - type: CheckBox
-            name: modelContourPlotSwitch
+            name: mixtureContourPlotSwitch
       - type: Label
-        label: Effect Plot
+        label: Mixture Effect Plot
         children:
           - type: ComboBox
             name: effectPlotModelType
@@ -50,12 +55,7 @@ children:
           - type: CheckBox
             name: effectPlotSwitch
       - type: Label
-        label: Mixture Contour Plot
+        label: Model Contour Plot
         children:
-          - type: ComboBox
-            name: mixturePlotModelType
-          - type: TextBox
-            name: numBreaks
-            format: number
           - type: CheckBox
-            name: mixtureContourPlotSwitch
+            name: modelContourPlotSwitch

@@ -1,6 +1,6 @@
 ---
-name:  linModel
-title: Linear Model
+name:  resOptimization
+title: Response Optimization
 menuGroup: DoE
 version: '1.0.0'
 jas: '1.2'
@@ -9,9 +9,9 @@ options:
     - name: data
       type: Data
 
-    - name: dep
-      title: Dependent Variable
-      type: Variable
+    - name: deps
+      title: Response Variables
+      type: Variables
       suggested:
         - continuous
       permitted:
@@ -25,18 +25,12 @@ options:
       title: Model Terms
       type: Terms
 
-    - name: anovaType
-      title: ANOVA Type
-      type: List
-      options:
-        - title: II
-          name: '2'
-        - title: III
-          name: '3'
-      default: '2'
+    - name: targetGoals
+      title: Target goals of responses
+      type: String
 
-    - name: contourFormula
-      title: Formula
+    - name: lowerUpperBounds
+      title: Lower and upper bounds of responses
       type: String
 
 ...

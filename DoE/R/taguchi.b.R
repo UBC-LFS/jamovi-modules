@@ -31,6 +31,7 @@ taguchiClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                 <li>Each of factor levels: 200,250,300; 100,125,150; 150,180,195</li>
                             </ul>
                             <h5>Orthogonal Arrays</h5>
+                            <div>To see more details of arrays: <a href="https://www.york.ac.uk/depts/maths/tables/taguchi_table.htm" target="_blank">www.york.ac.uk</a></div>
                             <ul>
                                 <li><strong>L4_2</strong> for three two-level factors</li>
                                 <li><strong>L8_2</strong> for seven two-level factors</li>
@@ -60,17 +61,19 @@ taguchiClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
         .run = function() {
             nFactors <- self$options$numberFactors
-            if (nFactors < 1 || is.empty(self$options$nameFactors) == TRUE || is.empty(self$options$numberFactorLevels) == TRUE || is.empty(self$options$eachFactorLevels) == TRUE)
+            if (nFactors < 1 || is.empty(self$options$nameFactors) == TRUE || is.empty(self$options$numberFactorLevels) == TRUE || is.empty(self$options$eachColumnIndex) == TRUE || is.empty(self$options$eachFactorLevels) == TRUE)
                 return()
 
-            nameFactors <- strsplit(self$options$nameFactors, ',')
-            if (length(nameFactors[[1]]) != nFactors)
+            nameFactors <- strsplit(self$options$nameFactors, ',')[[1]]
+            if (length(nameFactors) != nFactors)
                 jmvcore::reject("The number of factor names is not equal to the number of factors")
             
             numberFactorLevels <- self$options$numberFactorLevels
 
-            eachFactorLevels <- strsplit(self$options$eachFactorLevels, ';')
-            if (length(eachFactorLevels[[1]]) != nFactors)
+            eachColumnIndex <- self$options$eachColumnIndex
+
+            eachFactorLevels <- strsplit(self$options$eachFactorLevels, ';')[[1]]
+            if (length(eachFactorLevels) != nFactors)
                 jmvcore::reject("The number of each of factor levels is not equal to the number of factors")
 
             design <- self$options$design
@@ -82,47 +85,96 @@ taguchiClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 randomize = randomize, 
                 replicates = as.double(replicates)
             )
-            df <- as.data.frame(tdo)
+
+            df <- data.frame(tdo)
+            columnIndices <- strsplit(eachColumnIndex, ',')[[1]]
+            maxNumFactors <- length(df) - 4
+
+            for (i in 1:length(columnIndices[[1]])) {
+                if (as.integer(columnIndices[i]) > maxNumFactors) {
+                    print( paste("Column Index cannot be greater than", maxNumFactors) )
+                }
+            }
 
             nRows = 0
             nCols = nFactors
 
             items <- vector()
-            for (i in 1:length(eachFactorLevels[[1]])) {
-                eachLevels <- strsplit(eachFactorLevels[[1]][i], ',')
-                
-                if (length(eachLevels[[1]]) != numberFactorLevels)
-                jmvcore::reject("The number of each of factor levels is not equal to the number of factor levels")
-
+            for (i in 1:length(eachFactorLevels)) {
+                eachLevels <- strsplit(eachFactorLevels[i], ',')
+                if (length(eachLevels[[1]]) != numberFactorLevels) {
+                    print("The number of each of factor levels is not equal to the number of factor levels")
+                }
                 nRows <- length(eachLevels[[1]])
                 for (j in 1:length(eachLevels[[1]])) {
-                    items <- c( items, as.double(eachLevels[[1]][j]) )
+                    items <- c( items, as.character( trimws(eachLevels[[1]][j]) ) )
                 }
             }
 
             array <- array(items, dim=c(nRows,nCols))
+            columnIndices <- as.integer(columnIndices)
+            sortedcolumnIndices <- sort(columnIndices)
 
-            indices <- vector()
-            for (i in 1:(3 + nCols)) indices <- c(indices, i)
+            indexNames <- list()
+            for (i in 1:length(nameFactors)) {
+                indexNames[[ as.character(columnIndices[i]) ]] <- nameFactors[i]
+            }
 
-            df <- data.frame( subset(df, select=indices) )
+            newList <- list()
+            for (i in 1:length(sortedcolumnIndices)) {
+                idx <- sortedcolumnIndices[i]
+                val <- indexNames[[as.character(idx)]]
+                lo <- match(columnIndices[i], sortedcolumnIndices)
 
-            result <- df
-            for (i in 1:length(df)) {
-                if (i > 3) {
-                    for (j in 1:length(df[[i]])) {
-                        result[[i]][j] <- array[df[[i]][j], i-3]
-                    }
+                temp <- vector()
+                for (j in 1:length(df[[idx + 3]])) {
+                    temp <- c(temp, array[ df[[idx + 3]][j], lo ])
                 }
+                newList[[ val ]] <- temp
             }
 
-            names <- c("StandOrder", "RunOrder", "Replicate")
-            for (i in 1:nFactors) {
-                names <- c( names, trimws(nameFactors[[1]][i]) )
-            }
-
-            names(result) <- names
+            result <- data.frame(select(df, c("StandOrder", "RunOrder", "Replicate")), newList)
             self$results$text$setContent(result)
+
+            # nRows = 0
+            # nCols = nFactors
+
+            # items <- vector()
+            # for (i in 1:length(eachFactorLevels[[1]])) {
+            #     eachLevels <- strsplit(eachFactorLevels[[1]][i], ',')
+                
+            #     if (length(eachLevels[[1]]) != numberFactorLevels) {
+            #         jmvcore::reject("The number of each of factor levels is not equal to the number of factor levels")
+            #     }
+
+            #     nRows <- length(eachLevels[[1]])
+            #     for (j in 1:length(eachLevels[[1]])) {
+            #         items <- c( items, as.double(eachLevels[[1]][j]) )
+            #     }
+            # }
+
+            # array <- array(items, dim=c(nRows,nCols))
+
+            # indices <- vector()
+            # for (i in 1:(3 + nCols)) indices <- c(indices, i)
+
+            # df <- data.frame( subset(df, select=indices) )
+
+            # result <- df
+            # for (i in 1:length(df)) {
+            #     if (i > 3) {
+            #         for (j in 1:length(df[[i]])) {
+            #             result[[i]][j] <- array[df[[i]][j], i-3]
+            #         }
+            #     }
+            # }
+
+            # names <- c("StandOrder", "RunOrder", "Replicate")
+            # for (i in 1:nFactors) {
+            #     names <- c( names, trimws(nameFactors[[1]][i]) )
+            # }
+
+            # names(result) <- names
         }
     )
 )

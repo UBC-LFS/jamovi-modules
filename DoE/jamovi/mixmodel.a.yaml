@@ -10,7 +10,7 @@ options:
       type: Data
 
     - name: dep
-      title: dependent Variable
+      title: Dependent Variable
       type: Variable
       suggested:
         - continuous
@@ -38,7 +38,24 @@ options:
           name: '6'
       default: '2'
           
-    - name: modelContourPlotSwitch
+    - name: mixturePlotModelType
+      title: Model type
+      type: List
+      options:
+        - title: 'Linear'
+          name: '1'
+        - title: 'Quadratic'
+          name: '2'
+        - title: 'Special Cubic'
+          name: '4'
+      default: '2'
+
+    - name: numBreaks
+      title: Number of breaks
+      type: Integer
+      default: 10
+
+    - name: mixtureContourPlotSwitch
       title: Display?
       type: Bool
       default: false
@@ -86,24 +103,7 @@ options:
       type: Bool
       default: false
 
-    - name: mixturePlotModelType
-      title: Model type
-      type: List
-      options:
-        - title: 'Linear'
-          name: '1'
-        - title: 'Quadratic'
-          name: '2'
-        - title: 'Special Cubic'
-          name: '4'
-      default: '2'
-
-    - name: numBreaks
-      title: Number of breaks
-      type: Integer
-      default: 10
-
-    - name: mixtureContourPlotSwitch
+    - name: modelContourPlotSwitch
       title: Display?
       type: Bool
       default: false

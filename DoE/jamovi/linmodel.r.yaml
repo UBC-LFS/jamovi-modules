@@ -17,6 +17,10 @@ items:
       title: ANOVA
       type: Preformatted
 
+    - name: factorLevels
+      title: Factor Levels
+      type: Preformatted
+
     - name: paretoPlot
       title: Pareto Plot
       type: Image
@@ -24,36 +28,10 @@ items:
       height: 350
       renderFun: .paretoPlot
 
-    - name: resTableMeans
-      title: Response Table for Means
-      type: Preformatted
-
-    - name: mainEffectsPlot
-      title: Main Effects Plot
-      type: Image
-      width: 450
-      height: 350
-      renderFun: .mainEffectsPlot
-      
-    - name: interactionPlot
-      title: Interaction Plot
-      type: Image
-      width: 450
-      height: 350
-      renderFun: .interactionPlot
-
     - name: contourPlot
       title: Contour Plot
       type: Image
       width: 450
       height: 350
       renderFun: .contourPlot
-
-    - name: normalPlot
-      title: Normal Plot
-      type: Image
-      width: 450
-      height: 350
-      renderFun: .normalPlot
-
 ...

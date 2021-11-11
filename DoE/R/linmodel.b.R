@@ -28,19 +28,8 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         <br />
                         <div>
                             <h5>Example</h5>
-                            <div>
-                                C is an independent variable and A and B are dependent variables, and squared terms would be <strong>AA</strong> and <strong>BB</strong>.
-                            </div>
                             <ul>
-                                <li>Main Effects Formula: C ~ A</li>
-                                <li>
-                                    Interaction Plot:
-                                    <ul>
-                                        <li>Factor X: A</li>
-                                        <li>Trace Factor: B</li>
-                                        <li>Reponse: C</li>
-                                    </ul>
-                                </li>
+                                <li>C is a dependent variable and A and B are independent variables, and squared terms would be <strong>AA</strong> and <strong>BB</strong>.</li>
                                 <li>Contour Formula: ~ A + B (or B ~ A)</li>
                             </ul>
                             <h5>Note</h5>
@@ -75,91 +64,19 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             # Make factor levels
             # Reference: https://github.com/cran/pid/blob/master/R/paretoPlot.R
-            # coef(model)
-            # coeff.full <- coef(model)[2:length(coef(model))]
-            # coeff.full <- na.omit(coeff.full)
-            # coeff.abs <- unname(abs(coeff.full))
-            # coeff <- sort(coeff.abs, index.return = TRUE, method = "shell")
+            coef(model)
+            coeff.full <- coef(model)[2:length(coef(model))]
+            coeff.full <- na.omit(coeff.full)
+            coeff.abs <- unname(abs(coeff.full))
+            coeff <- sort(coeff.abs, index.return = TRUE, method = "shell")
 
-            # temp <- names(coeff.full)[coeff$ix]
-            # fnames <- factor(temp, levels = temp, ordered = TRUE)
+            temp <- names(coeff.full)[coeff$ix]
+            fnames <- factor(temp, levels = temp, ordered = TRUE)
 
-            # self$results$factorLevels$setContent(fnames)
+            self$results$factorLevels$setContent(fnames)
+
+            # Pareto plot
             self$results$paretoPlot$setState(model)
-
-            # Make factor ranks
-            if (!is.null(self$options$resVars) && nchar(self$options$resVars) > 0) {
-                resVars = strsplit(self$options$resVars, ',')[[1]]
-                df <- data.frame(data)
-                
-                numUniqueItems <- length(as.character(unlist(unique(df[1]))))
-                
-                dataList <- list()
-                deltas <- vector()
-                temp <- vector()
-                for (i in 1:length(indeps)) {
-                    by <- as.character(unlist(df[indeps[i]]))
-                    y <- as.data.frame(by, stringsAsFactors = FALSE)
-                    splited <- split(df, y)
-                    temp <- c(temp, splited)
-                    
-                    temp <- vector()
-                    for (j in 1:length(splited)) {
-                        selected <- select(splited[[j]], resVars)
-                        merged <- lapply(selected, sum)
-                        summed <- colSums(do.call(rbind, merged))
-                        result <- summed / (length(splited[[j]]) * length(resVars))
-                        temp <- c(temp, result)
-                    }
-                    
-                    delta <- max(temp) - min(temp)
-                    deltas <- c(deltas, delta)
-                    dataList[[indeps[i]]] <- c(temp, delta)
-                }
-
-                meanTable <- data.frame(dataList)
-                ranks <- rank(-deltas)
-
-                result <- rbind(meanTable, ranks)
-                
-                rowNames <- vector()
-                for (i in 1:numUniqueItems) {
-                    rowNames <- c(rowNames, paste("Level", i))
-                }
-                rowNames <- c(rowNames, c("Delta", "Rank"))
-                row.names(result) <- rowNames
-
-                self$results$resTableMeans$setContent(result)
-            }
-
-            if (!is.null(self$options$norVar) && nchar(self$options$norVar) > 0) {
-                norVar <- self$options$norVar
-                self$results$normalPlot$setState(data[norVar][[1]])
-            }
-
-            if (!is.null(self$options$mainEffectsFormula) && nchar(self$options$mainEffectsFormula) > 0) {
-                mainEffectsFormula <- as.formula(self$options$mainEffectsFormula)
-                mainEffectsData <- list(data = data, mainEffectsFormula = mainEffectsFormula)
-                self$results$mainEffectsPlot$setState(mainEffectsData)
-            }
-
-            if (!is.null(self$options$interactionFactorX) && nchar(self$options$interactionFactorX) > 0 
-            && !is.null(self$options$interactionTraceFactor) && nchar(self$options$interactionTraceFactor) > 0 
-            && !is.null(self$options$interactionFactorY) && nchar(self$options$interactionFactorY) > 0) {
-                interactionFactorX <- self$options$interactionFactorX
-                interactionTraceFactor <- self$options$interactionTraceFactor
-                interactionFactorY <- self$options$interactionFactorY
-
-                interactionData <- list(
-                    X = data[interactionFactorX][[1]], 
-                    traceFactor = data[interactionTraceFactor][[1]], 
-                    response = data[interactionFactorY][[1]],
-                    xLabel = interactionFactorX,
-                    traceLabel = interactionTraceFactor,
-                    yLabel = paste("mean of", interactionFactorY)
-                )
-                self$results$interactionPlot$setState(interactionData)
-            }
 
             if (!is.null(self$options$contourFormula) && nchar(self$options$contourFormula) > 0) {
                 contourFormula <- as.formula(self$options$contourFormula)
@@ -167,7 +84,7 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 self$results$contourPlot$setState(contourData)
             }
         },
-        .formula=function() {
+        .formula = function() {
             terms <- self$options$modelTerms
             if (is.null(terms))
                 terms <- private$.ff()
@@ -178,7 +95,7 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             formula <- paste0(lhs, ' ~ ', rhs)
             formula
         },
-        .ff=function() {
+        .ff = function() {
             fixedFactors <- self$options$indeps
 
             if (length(fixedFactors) > 1) {
@@ -206,44 +123,11 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             print(plot)
             TRUE
         },
-        .mainEffectsPlot = function(image, ...) {
-            if (is.null(image$state))
-                return(FALSE)
-
-            plot <- plotmeans(formula = image$state$mainEffectsFormula, data = image$state$data)
-            print(plot)
-            TRUE
-        },
-        .interactionPlot = function(image, ...) {
-            if (is.null(image$state))
-                return(FALSE)
-
-            plot <- interaction.plot(
-                image$state$X, 
-                image$state$traceFactor,
-                image$state$response, 
-                fun = mean,
-                xlab = image$state$xLabel,
-                trace.label = image$state$traceLabel,
-                ylab = image$state$yLabel
-            )
-            print(plot)
-            TRUE
-        },
         .contourPlot = function(image, ...) {
             if (is.null(image$state))
                 return(FALSE)
 
             plot <- contour(image$state$model, image$state$contourFormula, image = TRUE) 
-            print(plot)
-            TRUE
-        },
-        .normalPlot = function(image, ...) {
-            if (is.null(image$state))
-                return(FALSE)
-
-            plot <- qqnorm(image$state)
-            qqline(image$state)
             print(plot)
             TRUE
         }

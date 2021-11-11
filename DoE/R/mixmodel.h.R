@@ -9,15 +9,15 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             dep = NULL,
             indeps = NULL,
             mixModelType = "2",
-            modelContourPlotSwitch = FALSE,
+            mixturePlotModelType = "2",
+            numBreaks = 10,
+            mixtureContourPlotSwitch = FALSE,
             effectPlotModelType = "2",
             numFactors = 2,
             direction = "1",
             numProcessVar = 0,
             effectPlotSwitch = FALSE,
-            mixturePlotModelType = "2",
-            numBreaks = 10,
-            mixtureContourPlotSwitch = FALSE, ...) {
+            modelContourPlotSwitch = FALSE, ...) {
 
             super$initialize(
                 package="DoE",
@@ -46,9 +46,21 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "5",
                     "6"),
                 default="2")
-            private$..modelContourPlotSwitch <- jmvcore::OptionBool$new(
-                "modelContourPlotSwitch",
-                modelContourPlotSwitch,
+            private$..mixturePlotModelType <- jmvcore::OptionList$new(
+                "mixturePlotModelType",
+                mixturePlotModelType,
+                options=list(
+                    "1",
+                    "2",
+                    "4"),
+                default="2")
+            private$..numBreaks <- jmvcore::OptionInteger$new(
+                "numBreaks",
+                numBreaks,
+                default=10)
+            private$..mixtureContourPlotSwitch <- jmvcore::OptionBool$new(
+                "mixtureContourPlotSwitch",
+                mixtureContourPlotSwitch,
                 default=FALSE)
             private$..effectPlotModelType <- jmvcore::OptionList$new(
                 "effectPlotModelType",
@@ -80,62 +92,50 @@ mixModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "effectPlotSwitch",
                 effectPlotSwitch,
                 default=FALSE)
-            private$..mixturePlotModelType <- jmvcore::OptionList$new(
-                "mixturePlotModelType",
-                mixturePlotModelType,
-                options=list(
-                    "1",
-                    "2",
-                    "4"),
-                default="2")
-            private$..numBreaks <- jmvcore::OptionInteger$new(
-                "numBreaks",
-                numBreaks,
-                default=10)
-            private$..mixtureContourPlotSwitch <- jmvcore::OptionBool$new(
-                "mixtureContourPlotSwitch",
-                mixtureContourPlotSwitch,
+            private$..modelContourPlotSwitch <- jmvcore::OptionBool$new(
+                "modelContourPlotSwitch",
+                modelContourPlotSwitch,
                 default=FALSE)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..indeps)
             self$.addOption(private$..mixModelType)
-            self$.addOption(private$..modelContourPlotSwitch)
+            self$.addOption(private$..mixturePlotModelType)
+            self$.addOption(private$..numBreaks)
+            self$.addOption(private$..mixtureContourPlotSwitch)
             self$.addOption(private$..effectPlotModelType)
             self$.addOption(private$..numFactors)
             self$.addOption(private$..direction)
             self$.addOption(private$..numProcessVar)
             self$.addOption(private$..effectPlotSwitch)
-            self$.addOption(private$..mixturePlotModelType)
-            self$.addOption(private$..numBreaks)
-            self$.addOption(private$..mixtureContourPlotSwitch)
+            self$.addOption(private$..modelContourPlotSwitch)
         }),
     active = list(
         dep = function() private$..dep$value,
         indeps = function() private$..indeps$value,
         mixModelType = function() private$..mixModelType$value,
-        modelContourPlotSwitch = function() private$..modelContourPlotSwitch$value,
+        mixturePlotModelType = function() private$..mixturePlotModelType$value,
+        numBreaks = function() private$..numBreaks$value,
+        mixtureContourPlotSwitch = function() private$..mixtureContourPlotSwitch$value,
         effectPlotModelType = function() private$..effectPlotModelType$value,
         numFactors = function() private$..numFactors$value,
         direction = function() private$..direction$value,
         numProcessVar = function() private$..numProcessVar$value,
         effectPlotSwitch = function() private$..effectPlotSwitch$value,
-        mixturePlotModelType = function() private$..mixturePlotModelType$value,
-        numBreaks = function() private$..numBreaks$value,
-        mixtureContourPlotSwitch = function() private$..mixtureContourPlotSwitch$value),
+        modelContourPlotSwitch = function() private$..modelContourPlotSwitch$value),
     private = list(
         ..dep = NA,
         ..indeps = NA,
         ..mixModelType = NA,
-        ..modelContourPlotSwitch = NA,
+        ..mixturePlotModelType = NA,
+        ..numBreaks = NA,
+        ..mixtureContourPlotSwitch = NA,
         ..effectPlotModelType = NA,
         ..numFactors = NA,
         ..direction = NA,
         ..numProcessVar = NA,
         ..effectPlotSwitch = NA,
-        ..mixturePlotModelType = NA,
-        ..numBreaks = NA,
-        ..mixtureContourPlotSwitch = NA)
+        ..modelContourPlotSwitch = NA)
 )
 
 mixModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -144,9 +144,9 @@ mixModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         usage = function() private$.items[["usage"]],
         mixModel = function() private$.items[["mixModel"]],
-        modelContourPlot = function() private$.items[["modelContourPlot"]],
+        mixtureContourPlot = function() private$.items[["mixtureContourPlot"]],
         effectPlot = function() private$.items[["effectPlot"]],
-        mixtureContourPlot = function() private$.items[["mixtureContourPlot"]]),
+        modelContourPlot = function() private$.items[["modelContourPlot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -165,25 +165,25 @@ mixModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Mixture Model"))
             self$add(jmvcore::Image$new(
                 options=options,
-                name="modelContourPlot",
-                title="Model Contour Plot",
+                name="mixtureContourPlot",
+                title="Mixture Contour Plot",
                 width=350,
                 height=350,
-                renderFun=".modelContourPlot"))
+                renderFun=".mixtureContourPlot"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="effectPlot",
-                title="Effect Plot",
+                title="Mixture Effect Plot",
                 width=350,
                 height=350,
                 renderFun=".effectPlot"))
             self$add(jmvcore::Image$new(
                 options=options,
-                name="mixtureContourPlot",
-                title="Mixture Contour Plot",
+                name="modelContourPlot",
+                title="Model Contour Plot",
                 width=350,
                 height=350,
-                renderFun=".mixtureContourPlot"))}))
+                renderFun=".modelContourPlot"))}))
 
 mixModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "mixModelBase",
@@ -212,22 +212,22 @@ mixModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param dep .
 #' @param indeps .
 #' @param mixModelType .
-#' @param modelContourPlotSwitch .
+#' @param mixturePlotModelType .
+#' @param numBreaks .
+#' @param mixtureContourPlotSwitch .
 #' @param effectPlotModelType .
 #' @param numFactors .
 #' @param direction .
 #' @param numProcessVar .
 #' @param effectPlotSwitch .
-#' @param mixturePlotModelType .
-#' @param numBreaks .
-#' @param mixtureContourPlotSwitch .
+#' @param modelContourPlotSwitch .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$usage} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$mixModel} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$modelContourPlot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$effectPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$mixtureContourPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$effectPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$modelContourPlot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' @export
@@ -236,15 +236,15 @@ mixModel <- function(
     dep,
     indeps,
     mixModelType = "2",
-    modelContourPlotSwitch = FALSE,
+    mixturePlotModelType = "2",
+    numBreaks = 10,
+    mixtureContourPlotSwitch = FALSE,
     effectPlotModelType = "2",
     numFactors = 2,
     direction = "1",
     numProcessVar = 0,
     effectPlotSwitch = FALSE,
-    mixturePlotModelType = "2",
-    numBreaks = 10,
-    mixtureContourPlotSwitch = FALSE) {
+    modelContourPlotSwitch = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("mixModel requires jmvcore to be installed (restart may be required)")
@@ -262,15 +262,15 @@ mixModel <- function(
         dep = dep,
         indeps = indeps,
         mixModelType = mixModelType,
-        modelContourPlotSwitch = modelContourPlotSwitch,
+        mixturePlotModelType = mixturePlotModelType,
+        numBreaks = numBreaks,
+        mixtureContourPlotSwitch = mixtureContourPlotSwitch,
         effectPlotModelType = effectPlotModelType,
         numFactors = numFactors,
         direction = direction,
         numProcessVar = numProcessVar,
         effectPlotSwitch = effectPlotSwitch,
-        mixturePlotModelType = mixturePlotModelType,
-        numBreaks = numBreaks,
-        mixtureContourPlotSwitch = mixtureContourPlotSwitch)
+        modelContourPlotSwitch = modelContourPlotSwitch)
 
     analysis <- mixModelClass$new(
         options = options,

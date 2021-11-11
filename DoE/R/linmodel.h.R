@@ -8,16 +8,9 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         initialize = function(
             dep = NULL,
             indeps = NULL,
-            moreVars = NULL,
             modelTerms = NULL,
             anovaType = "2",
-            resVars = NULL,
-            mainEffectsFormula = NULL,
-            interactionFactorX = NULL,
-            interactionTraceFactor = NULL,
-            interactionFactorY = NULL,
-            contourFormula = NULL,
-            norVar = NULL, ...) {
+            contourFormula = NULL, ...) {
 
             super$initialize(
                 package="DoE",
@@ -35,9 +28,6 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..indeps <- jmvcore::OptionVariables$new(
                 "indeps",
                 indeps)
-            private$..moreVars <- jmvcore::OptionVariables$new(
-                "moreVars",
-                moreVars)
             private$..modelTerms <- jmvcore::OptionTerms$new(
                 "modelTerms",
                 modelTerms)
@@ -48,67 +38,28 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "2",
                     "3"),
                 default="2")
-            private$..resVars <- jmvcore::OptionString$new(
-                "resVars",
-                resVars)
-            private$..mainEffectsFormula <- jmvcore::OptionString$new(
-                "mainEffectsFormula",
-                mainEffectsFormula)
-            private$..interactionFactorX <- jmvcore::OptionString$new(
-                "interactionFactorX",
-                interactionFactorX)
-            private$..interactionTraceFactor <- jmvcore::OptionString$new(
-                "interactionTraceFactor",
-                interactionTraceFactor)
-            private$..interactionFactorY <- jmvcore::OptionString$new(
-                "interactionFactorY",
-                interactionFactorY)
             private$..contourFormula <- jmvcore::OptionString$new(
                 "contourFormula",
                 contourFormula)
-            private$..norVar <- jmvcore::OptionString$new(
-                "norVar",
-                norVar)
 
             self$.addOption(private$..dep)
             self$.addOption(private$..indeps)
-            self$.addOption(private$..moreVars)
             self$.addOption(private$..modelTerms)
             self$.addOption(private$..anovaType)
-            self$.addOption(private$..resVars)
-            self$.addOption(private$..mainEffectsFormula)
-            self$.addOption(private$..interactionFactorX)
-            self$.addOption(private$..interactionTraceFactor)
-            self$.addOption(private$..interactionFactorY)
             self$.addOption(private$..contourFormula)
-            self$.addOption(private$..norVar)
         }),
     active = list(
         dep = function() private$..dep$value,
         indeps = function() private$..indeps$value,
-        moreVars = function() private$..moreVars$value,
         modelTerms = function() private$..modelTerms$value,
         anovaType = function() private$..anovaType$value,
-        resVars = function() private$..resVars$value,
-        mainEffectsFormula = function() private$..mainEffectsFormula$value,
-        interactionFactorX = function() private$..interactionFactorX$value,
-        interactionTraceFactor = function() private$..interactionTraceFactor$value,
-        interactionFactorY = function() private$..interactionFactorY$value,
-        contourFormula = function() private$..contourFormula$value,
-        norVar = function() private$..norVar$value),
+        contourFormula = function() private$..contourFormula$value),
     private = list(
         ..dep = NA,
         ..indeps = NA,
-        ..moreVars = NA,
         ..modelTerms = NA,
         ..anovaType = NA,
-        ..resVars = NA,
-        ..mainEffectsFormula = NA,
-        ..interactionFactorX = NA,
-        ..interactionTraceFactor = NA,
-        ..interactionFactorY = NA,
-        ..contourFormula = NA,
-        ..norVar = NA)
+        ..contourFormula = NA)
 )
 
 linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -118,12 +69,9 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         usage = function() private$.items[["usage"]],
         linearReg = function() private$.items[["linearReg"]],
         anova = function() private$.items[["anova"]],
+        factorLevels = function() private$.items[["factorLevels"]],
         paretoPlot = function() private$.items[["paretoPlot"]],
-        resTableMeans = function() private$.items[["resTableMeans"]],
-        mainEffectsPlot = function() private$.items[["mainEffectsPlot"]],
-        interactionPlot = function() private$.items[["interactionPlot"]],
-        contourPlot = function() private$.items[["contourPlot"]],
-        normalPlot = function() private$.items[["normalPlot"]]),
+        contourPlot = function() private$.items[["contourPlot"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -144,6 +92,10 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="anova",
                 title="ANOVA"))
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="factorLevels",
+                title="Factor Levels"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="paretoPlot",
@@ -151,38 +103,13 @@ linModelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=450,
                 height=350,
                 renderFun=".paretoPlot"))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="resTableMeans",
-                title="Response Table for Means"))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="mainEffectsPlot",
-                title="Main Effects Plot",
-                width=450,
-                height=350,
-                renderFun=".mainEffectsPlot"))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="interactionPlot",
-                title="Interaction Plot",
-                width=450,
-                height=350,
-                renderFun=".interactionPlot"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="contourPlot",
                 title="Contour Plot",
                 width=450,
                 height=350,
-                renderFun=".contourPlot"))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="normalPlot",
-                title="Normal Plot",
-                width=450,
-                height=350,
-                renderFun=".normalPlot"))}))
+                renderFun=".contourPlot"))}))
 
 linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "linModelBase",
@@ -210,27 +137,17 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param data .
 #' @param dep .
 #' @param indeps .
-#' @param moreVars .
 #' @param modelTerms .
 #' @param anovaType .
-#' @param resVars .
-#' @param mainEffectsFormula .
-#' @param interactionFactorX .
-#' @param interactionTraceFactor .
-#' @param interactionFactorY .
 #' @param contourFormula .
-#' @param norVar .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$usage} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$linearReg} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$anova} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$factorLevels} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$paretoPlot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$resTableMeans} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$mainEffectsPlot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$interactionPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$contourPlot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$normalPlot} \tab \tab \tab \tab \tab an image \cr
 #' }
 #'
 #' @export
@@ -238,45 +155,29 @@ linModel <- function(
     data,
     dep,
     indeps,
-    moreVars,
     modelTerms,
     anovaType = "2",
-    resVars,
-    mainEffectsFormula,
-    interactionFactorX,
-    interactionTraceFactor,
-    interactionFactorY,
-    contourFormula,
-    norVar) {
+    contourFormula) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("linModel requires jmvcore to be installed (restart may be required)")
 
     if ( ! missing(dep)) dep <- jmvcore::resolveQuo(jmvcore::enquo(dep))
     if ( ! missing(indeps)) indeps <- jmvcore::resolveQuo(jmvcore::enquo(indeps))
-    if ( ! missing(moreVars)) moreVars <- jmvcore::resolveQuo(jmvcore::enquo(moreVars))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
             `if`( ! missing(dep), dep, NULL),
-            `if`( ! missing(indeps), indeps, NULL),
-            `if`( ! missing(moreVars), moreVars, NULL))
+            `if`( ! missing(indeps), indeps, NULL))
 
     if (inherits(modelTerms, "formula")) modelTerms <- jmvcore::decomposeFormula(modelTerms)
 
     options <- linModelOptions$new(
         dep = dep,
         indeps = indeps,
-        moreVars = moreVars,
         modelTerms = modelTerms,
         anovaType = anovaType,
-        resVars = resVars,
-        mainEffectsFormula = mainEffectsFormula,
-        interactionFactorX = interactionFactorX,
-        interactionTraceFactor = interactionTraceFactor,
-        interactionFactorY = interactionFactorY,
-        contourFormula = contourFormula,
-        norVar = norVar)
+        contourFormula = contourFormula)
 
     analysis <- linModelClass$new(
         options = options,

@@ -1,0 +1,31 @@
+---
+name:  resMeans
+title: Response Means
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: deps
+      title: Dependent Variables
+      type: Variables
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+
+    - name: indeps
+      title: Independent Variables
+      type: Variables
+
+    - name: resVars
+      title: Response Variables
+      type: String
+
+    - name: indepPlot
+      title: Independent Variable
+      type: String
+...

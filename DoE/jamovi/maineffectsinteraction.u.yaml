@@ -1,0 +1,48 @@
+title: Main Effects and Interaction Plots
+name: mainEffectsInteraction
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    name: variablesupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        children:
+          - type: VariablesListBox
+            name: vars
+            label: Variables
+            showColumnHeaders: false
+            columns:
+              - name: column1
+                label: null
+                stretchFactor: 1
+                template:
+                  type: VariableLabel
+            isTarget: true
+  - type: Label
+    label: Main Effects Plot
+    margin: large
+    children:
+      - type: TextBox
+        name: mainEffectsFormula
+        format: string
+        stretchFactor: 6
+  - type: Label
+    label: Interaction Plot
+    margin: large
+    children:
+      - type: TextBox
+        name: interactionFactorX
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: interactionTraceFactor
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: interactionFactorY
+        format: string
+        stretchFactor: 6

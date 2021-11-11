@@ -21,6 +21,10 @@ options:
       title: Number of factor levels
       type: Integer
 
+    - name: eachColumnIndex
+      title: Each of column index
+      type: String
+
     - name: eachFactorLevels
       title: Each of factor levels
       type: String

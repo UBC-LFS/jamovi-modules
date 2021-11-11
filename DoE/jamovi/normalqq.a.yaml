@@ -1,0 +1,19 @@
+---
+name:  normalQQ
+title: Normal QQ Plot
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: vars
+      title: Variables
+      type: Variables
+
+    - name: norVar
+      title: Variable (Factor)
+      type: String
+...

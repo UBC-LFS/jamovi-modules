@@ -16,7 +16,6 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         <div style="background-color:#f8f9fa; padding:1rem 1.5rem;">
                             <code>MixModel(data.frame, response, mixcomps, model.type)</code>
                         </div>
-
                         <div>
                             R package: 
                             <a href="https://cran.r-project.org/web/packages/mixexp/mixexp.pdf" target="_blank">mixexp</a><br />
@@ -24,11 +23,13 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         </div>
                         <br />
                         <div>
+                            <div><strong>Mixture model type:</strong> an integer in the range of 1 to 6, indicating the model to be fit. See more details in the official documentation.</div>
+
                             <h5>Details of plots</h5>
                             <ul>
-                                <li><strong>Model contour plot:</strong> This function makes contour plots of a user-supplied model in the simplex mixture space.</li>
+                                <li><strong>Mixture contour plot:</strong> This function makes contour plots in the simplex mixture space, it also can draw constraint lines and show design points.</li>
                                 <li>
-                                    <strong>Effect plot:</strong> This function makes effect plots using the Cox or Piepel directions in constrained mixture space.
+                                    <strong>Mixture Effect plot:</strong> This function makes effect plots using the Cox or Piepel directions in constrained mixture space.
                                     <div>ModelEff(ufunc, nfac, mod, nproc, dir, dimensions)</div>
                                     <ul>
                                         <li>ufunc: A user function, this should an lm object created by the MixModel function</li>
@@ -38,7 +39,7 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                         <li>nproc: The number of process variables in the model (a number between 1 and 3 for models 5 and 6)</li>
                                     </ul>
                                 </li>
-                                <li><strong>Mixture contour plot:</strong> This function makes contour plots in the simplex mixture space, it also can draw constraint lines and show design points.</li>
+                                <li><strong>Model contour plot:</strong> This function makes contour plots of a user-supplied model in the simplex mixture space.</li>
                             </ul>
                         </div>
                     </div>
@@ -61,33 +62,6 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             model <- MixModel(data, dep, indeps, mixModelType)
             self$results$mixModel$setContent( summary(model) )
 
-            if (modelContourPlotSwitch == TRUE) {
-                modelPlotData <- list(
-                    model = model,
-                    dimensions = list(x1 = indeps[3], x2 = indeps[1], x3 = indeps[2]), 
-                    cornerLabs = c(indeps[3], indeps[1], indeps[2])
-                )
-
-                self$results$modelContourPlot$setState(modelPlotData)
-            }
-
-            if (effectPlotSwitch == TRUE) {
-                effectPlotModelType <- as.double(self$options$effectPlotModelType)
-                numFactors <- as.double(self$options$numFactors)
-                direction <- as.double(self$options$direction)
-                numProcessVar <- as.double(self$options$numProcessVar)
-
-                effectPlotData <- list(
-                    model = model,
-                    effectPlotModelType = effectPlotModelType,
-                    numFactors = numFactors,
-                    direction = direction,
-                    numProcessVar = numProcessVar
-                )
-
-                self$results$effectPlot$setState(effectPlotData)
-            }
-
             if (mixtureContourPlotSwitch == TRUE) {
                 if (length(self$data) != 4)
                     jmvcore::reject("One dependent variable and three independent variables are required to display this Mixture Plot")
@@ -108,19 +82,47 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
                 self$results$mixtureContourPlot$setState(mixturePlotData)
             }
+
+            if (effectPlotSwitch == TRUE) {
+                effectPlotModelType <- as.double(self$options$effectPlotModelType)
+                numFactors <- as.double(self$options$numFactors)
+                direction <- as.double(self$options$direction)
+                numProcessVar <- as.double(self$options$numProcessVar)
+
+                effectPlotData <- list(
+                    model = model,
+                    effectPlotModelType = effectPlotModelType,
+                    numFactors = numFactors,
+                    direction = direction,
+                    numProcessVar = numProcessVar
+                )
+
+                self$results$effectPlot$setState(effectPlotData)
+            }
+
+            if (modelContourPlotSwitch == TRUE) {
+                modelPlotData <- list(
+                    model = model,
+                    dimensions = list(x1 = indeps[3], x2 = indeps[1], x3 = indeps[2]), 
+                    cornerLabs = c(indeps[3], indeps[1], indeps[2])
+                )
+
+                self$results$modelContourPlot$setState(modelPlotData)
+            }
         },
-        .modelContourPlot = function(image, ...) {
+        .mixtureContourPlot = function(image, ...) {
             if (is.null(image$state))
                 return(FALSE)
 
-            plot <- ModelPlot(
-                model = image$state$model,
-                dimensions = image$state$dimensions,
-                constraints = FALSE, 
-                contour = TRUE, 
-                fill = TRUE, 
-                cornerlabs = image$state$cornerLabs,
-                pseudo = FALSE
+            plot <- MixturePlot(
+                x = image$state$x3,
+                y = image$state$x2,
+                z = image$state$x1,
+                w = image$state$y,
+                corner.labs = image$state$cornerLabs,
+                mod = image$state$mod,
+                n.breaks = image$state$numBreaks,
+                cols = TRUE
             )
             print(plot)
             TRUE
@@ -139,19 +141,18 @@ mixModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             print(plot)
             TRUE
         },
-        .mixtureContourPlot = function(image, ...) {
+        .modelContourPlot = function(image, ...) {
             if (is.null(image$state))
                 return(FALSE)
 
-            plot <- MixturePlot(
-                x = image$state$x3,
-                y = image$state$x2,
-                z = image$state$x1,
-                w = image$state$y,
-                corner.labs = image$state$cornerLabs,
-                mod = image$state$mod,
-                n.breaks = image$state$numBreaks,
-                cols = TRUE
+            plot <- ModelPlot(
+                model = image$state$model,
+                dimensions = image$state$dimensions,
+                constraints = FALSE, 
+                contour = TRUE, 
+                fill = TRUE, 
+                cornerlabs = image$state$cornerLabs,
+                pseudo = FALSE
             )
             print(plot)
             TRUE

@@ -28,7 +28,7 @@ centralCompClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                 <li>Number of center points: 3</li>
                                 <li>Number of factors: 3</li>
                                 <li>Name of factors: A, B, C</li>
-                                <li>Default Levels: -1, 1</li>
+                                <li>Each of default Levels: -1,1; -1,1; -1,1</li>
                             </ul>
                             <p>Note: a face-centered design is created when alpha is equal to 1.</p>
                         </div>
@@ -37,20 +37,20 @@ centralCompClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>')
         },
         .run = function() {
+            
+            # To check whether intpus are valid or not
+            if (length(self$options$numberCenter) == 0 || length(self$options$numberFactors) == 0 || length(self$options$nameFactors) == 0 || length(self$options$eachDefaultLevels) == 0)
+                return()
 
             nCenter <- as.double(self$options$numberCenter)
             nFactors <- as.double(self$options$numberFactors)
 
-            # To check whether intpus are valid or not
-            if (nCenter < 1 || nFactors < 1 || nchar(self$options$nameFactors) == 0 || nchar(self$options$defaultLevels) == 0)
+            nameFactors <- strsplit(self$options$nameFactors, ',')[[1]]
+            if (length(nameFactors) < 1)
                 return()
 
-            nameFactors <- strsplit(self$options$nameFactors, ',')
-            if (length(nameFactors[[1]]) < 1)
-                return()
-
-            defaultLevels <- strsplit(self$options$defaultLevels, ',')
-            if (length(defaultLevels[[1]]) < 1)
+            eachDefaultLevels <- strsplit(self$options$eachDefaultLevels, ';')[[1]]
+            if (length(eachDefaultLevels) < 1)
                 return()
 
             nCube <- as.double(self$options$numberCube)
@@ -62,37 +62,37 @@ centralCompClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             seed1 <- as.double(self$options$seed1)
             seed2 <- as.double(self$options$seed2)
 
-            factorNames <- vector()
-            for (i in 1:nFactors) {
-                factorNames <- c( factorNames, trimws(nameFactors[[1]][i]) )
+            if (nCube == 0) nCube = NULL
+            if (alpha == "1") alpha <- as.double(alpha)
+
+            cube <- ceiling(nCenter / 2.0)
+            temp <- list()
+            order <- list()
+            for (i in 1:length(eachDefaultLevels)) {
+                levels <- strsplit(eachDefaultLevels[i], ',')[[1]]
+
+                # nBlocks shouble be double in this function
+                design <- ccd.design(
+                    nfactors = nFactors,
+                    default.levels = c(as.double(levels[1]), as.double(levels[2])),
+                    ncenter = c(cube, nCenter - cube),
+                    ncube = nCube,
+                    alpha = alpha,
+                    blocks = nBlocks,
+                    block.name = nameBlocks,
+                    replications = replications,
+                    seed = c(seed1, seed2),
+                    randomize = randomize
+                )
+                
+                if (i == 1) order <- run.order(design)
+                temp[[i]] <- design[, i + 1]
             }
 
-            if (nCube == 0) {
-                nCube = NULL
-            }
-
-            if (alpha == "1") {
-                alpha <- as.double(alpha)
-            }
-
-            # nBlocks shouble be double in this function
-            design <- ccd.design(
-                nfactors = nFactors,
-                factor.names = factorNames, 
-                default.levels = as.double( c(defaultLevels[[1]][1], defaultLevels[[1]][2]) ),
-                ncenter = nCenter,
-                ncube = nCube,
-                alpha = alpha,
-                blocks = nBlocks,
-                block.name = nameBlocks,
-                replications = replications,
-                seed = c(seed1, seed2),
-                randomize = randomize
-            )
-
-            order <- run.order(design)
-            df <- data.frame(subset(order, select=c(run.no.in.std.order, run.no)), design)
-            self$results$text$setContent( df )
+            df <- data.frame(temp)
+            names(df) <- nameFactors
+            result <- cbind(select(order, c(run.no.in.std.order, run.no)), df)
+            self$results$text$setContent(result)
         }
     )
 )

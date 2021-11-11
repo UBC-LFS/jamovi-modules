@@ -1,10 +1,10 @@
-title: Linear Model
-name: linModel
+title: Response Optimization
+name: resOptimization
 jus: '3.0'
 stage: 0
 compilerMode: tame
 events:
-  update: './events::update'
+  update: './resOpt_events::update'
 children:
   - type: VariableSupplier
     name: variablesupplier
@@ -14,11 +14,9 @@ children:
       - type: TargetLayoutBox
         children:
           - type: VariablesListBox
-            name: dep
-            label: Dependent Variable
+            name: deps
+            label: Response Variables
             showColumnHeaders: false
-            maxItemCount: 1
-            itemDropBehaviour: overwrite
             columns:
               - name: column1
                 label: null
@@ -33,7 +31,7 @@ children:
             label: Independent Variables
             showColumnHeaders: false
             events:
-              change: './events::onChange_indeps'
+              change: './resOpt_events::onChange_indeps'
             columns:
               - name: column1
                 label: null
@@ -52,7 +50,7 @@ children:
         persistentItems: true
         stretchFactor: 1
         events:
-          update: './events::onUpdate_modelSupplier'
+          update: './resOpt_events::onUpdate_modelSupplier'
         children:
           - type: TargetLayoutBox
             transferAction: interactions
@@ -63,20 +61,18 @@ children:
                 isTarget: true
                 itemDropBehaviour: emptyspace
                 events:
-                  change: './events::onChange_modelTerms'
+                  change: './resOpt_events::onChange_modelTerms'
                 template:
                   type: TermLabel
   - type: Label
-    label: ANOVA
-    children:
-      - type: ComboBox
-        name: anovaType
-
-  - type: Label
-    label: Contour Plot
+    label: Settings
     margin: large
     children:
       - type: TextBox
-        name: contourFormula
+        name: targetGoals
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: lowerUpperBounds
         format: string
         stretchFactor: 6

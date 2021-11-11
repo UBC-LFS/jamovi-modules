@@ -72,6 +72,30 @@ analyses:
     menuGroup: DoE
     menuSubgroup: Models
     menuTitle: Mixture Model
+  - title: Response Means
+    name: resMeans
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Additional Features for Response
+    menuTitle: Response Means
+  - title: Response Optimization
+    name: resOptimization
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: Additional Features for Response
+    menuTitle: Response Optimization
+  - title: Main Effects and Interaction Plots
+    name: mainEffectsInteraction
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: More Plots
+    menuTitle: Main Effects and Interaction Plots
+  - title: Normal QQ Plot
+    name: normalQQ
+    ns: DoE
+    menuGroup: DoE
+    menuSubgroup: More Plots
+    menuTitle: Normal QQ Plot
 usesNative: true
 minApp: 1.0.8
 

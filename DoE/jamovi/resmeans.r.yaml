@@ -1,0 +1,22 @@
+---
+name:  resMeans
+title: Response Means
+jrs:   '1.1'
+
+items:
+    - name: usage
+      title: Usage
+      type: Html
+      visible: True
+
+    - name: resTableMeans
+      title: Response Table for Means
+      type: Preformatted
+
+    - name: mainEffectsPlotMeans
+      title: Main Effects Plot for Means
+      type: Image
+      width: 450
+      height: 350
+      renderFun: .mainEffectsPlotMeans
+...

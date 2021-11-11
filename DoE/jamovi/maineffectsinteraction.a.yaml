@@ -1,0 +1,31 @@
+---
+name:  mainEffectsInteraction
+title: Main Effects and Interaction Plots
+menuGroup: DoE
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: vars
+      title: Variables
+      type: Variables
+
+    - name: mainEffectsFormula
+      title: Formula (confidence level = 0.95)
+      type: String
+      
+    - name: interactionFactorX
+      title: Factor X
+      type: String
+
+    - name: interactionTraceFactor
+      title: Trace Factor
+      type: String
+
+    - name: interactionFactorY
+      title: Response
+      type: String
+...

@@ -9,6 +9,7 @@ taguchiOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             numberFactors = NULL,
             nameFactors = NULL,
             numberFactorLevels = NULL,
+            eachColumnIndex = NULL,
             eachFactorLevels = NULL,
             design = NULL,
             replicates = 1,
@@ -29,6 +30,9 @@ taguchiOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..numberFactorLevels <- jmvcore::OptionInteger$new(
                 "numberFactorLevels",
                 numberFactorLevels)
+            private$..eachColumnIndex <- jmvcore::OptionString$new(
+                "eachColumnIndex",
+                eachColumnIndex)
             private$..eachFactorLevels <- jmvcore::OptionString$new(
                 "eachFactorLevels",
                 eachFactorLevels)
@@ -67,6 +71,7 @@ taguchiOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..numberFactors)
             self$.addOption(private$..nameFactors)
             self$.addOption(private$..numberFactorLevels)
+            self$.addOption(private$..eachColumnIndex)
             self$.addOption(private$..eachFactorLevels)
             self$.addOption(private$..design)
             self$.addOption(private$..replicates)
@@ -76,6 +81,7 @@ taguchiOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         numberFactors = function() private$..numberFactors$value,
         nameFactors = function() private$..nameFactors$value,
         numberFactorLevels = function() private$..numberFactorLevels$value,
+        eachColumnIndex = function() private$..eachColumnIndex$value,
         eachFactorLevels = function() private$..eachFactorLevels$value,
         design = function() private$..design$value,
         replicates = function() private$..replicates$value,
@@ -84,6 +90,7 @@ taguchiOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..numberFactors = NA,
         ..nameFactors = NA,
         ..numberFactorLevels = NA,
+        ..eachColumnIndex = NA,
         ..eachFactorLevels = NA,
         ..design = NA,
         ..replicates = NA,
@@ -140,6 +147,7 @@ taguchiBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param numberFactors .
 #' @param nameFactors .
 #' @param numberFactorLevels .
+#' @param eachColumnIndex .
 #' @param eachFactorLevels .
 #' @param design .
 #' @param replicates .
@@ -156,6 +164,7 @@ taguchi <- function(
     numberFactors,
     nameFactors,
     numberFactorLevels,
+    eachColumnIndex,
     eachFactorLevels,
     design,
     replicates = 1,
@@ -173,6 +182,7 @@ taguchi <- function(
         numberFactors = numberFactors,
         nameFactors = nameFactors,
         numberFactorLevels = numberFactorLevels,
+        eachColumnIndex = eachColumnIndex,
         eachFactorLevels = eachFactorLevels,
         design = design,
         replicates = replicates,
