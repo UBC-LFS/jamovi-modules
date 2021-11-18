@@ -14,7 +14,7 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
                     <div class="usage" style="color:black">
                         <h5>R code</h5>
                         <div style="background-color:#f8f9fa; padding:1rem 1.5rem;">
-                            <code>optim(par, fn, method = c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN", "Brent"), lower = -Inf, upper = Inf, control = list())</code><br />
+                            <code>optim(par, fn, method = "Nelder-Mead", lower = -Inf, upper = Inf, control = list())</code><br />
                             <code>desirability(response, low, high, target = "max", scale = c(1, 1), importance = 1, constraints)</code>
                         </div>
                         <div>
@@ -29,10 +29,20 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
                         <br />
                         <div>
                             <h5>Example</h5>
-                            Suppose that there 7 variables (A, B, C, D, E, F and G), and A, B and C are independent variables, and D, E, F and G are response variables.
+                            Suppose that there 7 variables (A, B, C, D, E, F and G).
                             <ul>
+                                <li>A, B and C are independent variables</li>
+                                <li>D, E, F and G are response variables</li>
+                            </ul>
+
+                            <div>Please enter the following inputs.</div>
+                            <ul>
+                                <li>Number of factors: 3</li>
                                 <li>Target goals of responses: 1.5, max, min, 5</li>
-                                <li>Lower and upper bounds of resopnses: 1,3; 3,8; 5,7; 5,6</li>
+                                <li>
+                                    Lower and upper bounds of resopnses: 1,3; NA,NA; NA,NA; 5,6 <br />
+                                    where NA means that floor(minimum), ceiling(maximum)
+                                </li>
                             </ul>
                             <h5>Note</h5>
                             <ul>
@@ -48,27 +58,38 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
                 return()
 
             data <- self$data
-            deps <- trimws(self$options$deps)
-            indeps <- trimws(self$options$indeps)
+            deps <- self$options$deps
+            indeps <- self$options$indeps
 
             for (i in 1:length(deps)) {
                 data[[ deps[i] ]] <- jmvcore::toNumeric(data[[ deps[i] ]])
             }
 
-            if (length(self$options$targetGoals) < 1)
+            if (is.null(self$options$numFactors) || nchar(self$options$numFactors) < 1)
+                jmvcore::reject("Please enter a number of factors")
+
+            numFactors <- as.double(self$options$numFactors)
+            factors <- indeps[1:numFactors]
+
+            actualValues <- NULL
+            if ( !is.null(self$options$actualValues) && nchar(self$options$actualValues) > 0) {
+                actualValues <- strsplit(self$options$actualValues, ";")[[1]]
+            }
+
+            if (is.null(self$options$targetGoals) || nchar(self$options$targetGoals) < 1)
                 jmvcore::reject("Please enter Target goals of responses")
             
-            if (length(self$options$lowerUpperBounds) < 1)
+            if (is.null(self$options$lowerUpperBounds) || nchar(self$options$lowerUpperBounds) < 1)
                 jmvcore::reject("Please enter Lower and upper bounds of responses")
             
-            targetGoals <- trimws(strsplit(self$options$targetGoals, ",")[[1]])
-            lowerUpperBounds <- trimws(strsplit(self$options$lowerUpperBounds, ";")[[1]])
-
+            
+            targetGoals <- strsplit(self$options$targetGoals, ",")[[1]]
+            lowerUpperBounds <- strsplit(self$options$lowerUpperBounds, ";")[[1]]
 
             # Reference: qualityTools::optimum 
             # https://github.com/cran/qualityTools/blob/master/R/des_e.r
             constraints <- list()
-            for (i in 1:length(indeps)) {
+            for (i in 1:length(factors)) {
                 constraints[[i]] <- c(min(data[, i]), max(data[, i]))
             }
 
@@ -82,16 +103,28 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
 
             desires <- list()
             desirabilities <- list()
-            for (i in 1:length(deps)) {    
+            for (i in 1:length(deps)) {
                 lowerUpper <- strsplit(lowerUpperBounds[i], ",")[[1]]
-                lower <- as.double(lowerUpper[1])
-                upper <- as.double(lowerUpper[2])
+                lower <- lowerUpper[1]
+                upper <- lowerUpper[2]
                 d <- as.vector( data[, deps[i]] )
                 
+                min <- min(d)
+                max <- max(d)
                 if ( check.numeric(targetGoals[i]) ) {
+                    if ( check.numeric(lower) == FALSE ) { lower <- min }
+                    if ( check.numeric(upper) == FALSE ) { upper <- max }
+                    lower <- as.double(lower)
+                    upper <- as.double(upper)
+                    
                     desires[[ deps[i] ]] <- desirability(d, lower, upper, target=as.double(targetGoals[i]))
                     desirabilities[[ deps[i] ]] <- dTarget(lower, as.double(targetGoals[i]), upper)
                 } else {
+                    if ( check.numeric(lower) == FALSE ) { lower <- floor(min) }
+                    if ( check.numeric(upper) == FALSE ) { upper <- ceiling(max) }
+                    lower <- as.double(lower)
+                    upper <- as.double(upper)
+                    
                     target <- trimws(targetGoals[i])
                     desires[[ deps[i] ]] <- desirability(d, lower, upper, target=target)
                     
@@ -139,7 +172,6 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
             dHelp <- function(model, dFun) {
                 lm1 <- model
                 d1 <- dFun
-                
                 out <- function(newdata) {
                     return( d1( stats::predict(lm1, newdata = newdata) ) )
                 }
@@ -162,24 +194,38 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
 
             dAll <- function(X) {
                 newdata <- data.frame(t(X))
-                names(newdata) <- indeps
+                names(newdata) <- factors
                 return( prod( unlist(lapply(dList, do.call, list(newdata = newdata))) )^geomFac )
+            }
+
+            code2real = function(low, high, codedValue) {
+                return( (diff(c(low, high)) / 2) * codedValue + mean(c(low, high)) )
             }
 
             # Run an optim function with a Nelder-Mead simplex method
             result <- optim(par = start, dAll, method = "Nelder-Mead", control = list(fnscale = -1, maxit = 1000))
 
+            actualResult <- list()
+            for (i in 1:length(factors)) {
+                if ( is.null(actualValues) ) {
+                    actualResult[[i]] <- result$par[i]
+                } else {
+                    lowHigh <- strsplit(actualValues[i], ",")[[1]]
+                    actualResult[[i]] <- code2real(as.double(lowHigh[1]), as.double(lowHigh[2]), result$par[i])
+                }
+            }
+
             # Get a global solution
             globalSolution <- list()
-            for (i in 1:length(indeps)) {
-                globalSolution[[ indeps[i] ]] <- result$par[i]
+            for (i in 1:length(factors)) {
+                globalSolution[[ factors[i] ]] <- actualResult[[i]]
             }
             self$results$globalSolution$setContent(globalSolution)
 
             # Get predicted responses
             newdata <- list()
             for (i in 1:length(result$par)) {
-                newdata[[ indeps[i] ]] <- result$par[i]
+                newdata[[ factors[i] ]] <- result$par[i]
             }
 
             predictedResponses <- list()
@@ -196,10 +242,10 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
             self$results$individualDes$setContent(indDes)
 
             # Display composite desirability
-            self$results$compositeDes$setContent(result$value)  
+            self$results$compositeDes$setContent(result$value)
         },
         .customFormula = function() {
-            deps <- trimws(self$options$deps)
+            deps <- self$options$deps
             terms <- self$options$modelTerms
 
             if (is.null(terms))
@@ -213,7 +259,7 @@ resOptimizationClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Cla
                 dep <- jmvcore::toNumeric(deps[i])
                 lhs <- jmvcore::composeTerm(dep)
                 formula <- paste0(lhs, ' ~ ', rhs)
-                formulas <- c(formulas, formula)
+                formulas <- c(formulas, gsub("`", "", formula, fixed=TRUE))
             }
 
             formulas

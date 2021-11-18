@@ -35,13 +35,15 @@ mainEffectsInteractionClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6
 
             data <- self$data
 
-            if (length(self$options$mainEffectsFormula) > 0) {
+            if ( !is.null(self$options$mainEffectsFormula) && nchar(self$options$mainEffectsFormula) > 0 ) {
                 mainEffectsFormula <- as.formula(self$options$mainEffectsFormula)
                 mainEffectsData <- list(data = data, mainEffectsFormula = mainEffectsFormula)
                 self$results$mainEffectsPlot$setState(mainEffectsData)
             }
 
-            if (length(self$options$interactionFactorX) > 0 && length(self$options$interactionTraceFactor) > 0 && length(self$options$interactionFactorY) > 0) {
+            if (!is.null(self$options$interactionFactorX) && nchar(self$options$interactionFactorX) > 0 &&
+                !is.null(self$options$interactionTraceFactor) && nchar(self$options$interactionTraceFactor) > 0&&
+                !is.null(self$options$interactionFactorY) && nchar(self$options$interactionFactorY) > 0) {
                 interactionFactorX <- self$options$interactionFactorX
                 interactionTraceFactor <- self$options$interactionTraceFactor
                 interactionFactorY <- self$options$interactionFactorY

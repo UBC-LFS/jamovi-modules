@@ -25,16 +25,6 @@ options:
       title: Model Terms
       type: Terms
 
-    - name: anovaType
-      title: ANOVA Type
-      type: List
-      options:
-        - title: II
-          name: '2'
-        - title: III
-          name: '3'
-      default: '2'
-
     - name: contourFormula
       title: Formula
       type: String

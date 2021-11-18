@@ -37,12 +37,12 @@ fracFacClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
         .run = function() {
 
+            # To check whether intpus are valid or not
+            if (self$options$numberRuns < 1 || self$options$numberFactors < 1 || is.null(self$options$nameFactors) || nchar(self$options$nameFactors) == 0 || is.null(self$options$defaultLevels) || nchar(self$options$defaultLevels) == 0)
+                return()
+
             nRuns <- self$options$numberRuns
             nFactors <- self$options$numberFactors
-
-            # To check whether intpus are valid or not
-            if (nRuns < 1 || nFactors < 1 || nchar(self$options$nameFactors) == 0 || nchar(self$options$defaultLevels) == 0)
-                return()
 
             nameFactors <- strsplit(self$options$nameFactors, ',')
             if (length(nameFactors[[1]]) < 1)

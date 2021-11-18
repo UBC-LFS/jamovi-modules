@@ -25,6 +25,14 @@ options:
       title: Model Terms
       type: Terms
 
+    - name: numFactors
+      title: Number of factors
+      type: String
+
+    - name: actualValues
+      title: Actual values of independent variables
+      type: String
+
     - name: targetGoals
       title: Target goals of responses
       type: String

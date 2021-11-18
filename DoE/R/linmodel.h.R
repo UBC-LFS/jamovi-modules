@@ -9,7 +9,6 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             dep = NULL,
             indeps = NULL,
             modelTerms = NULL,
-            anovaType = "2",
             contourFormula = NULL, ...) {
 
             super$initialize(
@@ -31,13 +30,6 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..modelTerms <- jmvcore::OptionTerms$new(
                 "modelTerms",
                 modelTerms)
-            private$..anovaType <- jmvcore::OptionList$new(
-                "anovaType",
-                anovaType,
-                options=list(
-                    "2",
-                    "3"),
-                default="2")
             private$..contourFormula <- jmvcore::OptionString$new(
                 "contourFormula",
                 contourFormula)
@@ -45,20 +37,17 @@ linModelOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..dep)
             self$.addOption(private$..indeps)
             self$.addOption(private$..modelTerms)
-            self$.addOption(private$..anovaType)
             self$.addOption(private$..contourFormula)
         }),
     active = list(
         dep = function() private$..dep$value,
         indeps = function() private$..indeps$value,
         modelTerms = function() private$..modelTerms$value,
-        anovaType = function() private$..anovaType$value,
         contourFormula = function() private$..contourFormula$value),
     private = list(
         ..dep = NA,
         ..indeps = NA,
         ..modelTerms = NA,
-        ..anovaType = NA,
         ..contourFormula = NA)
 )
 
@@ -138,7 +127,6 @@ linModelBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param dep .
 #' @param indeps .
 #' @param modelTerms .
-#' @param anovaType .
 #' @param contourFormula .
 #' @return A results object containing:
 #' \tabular{llllll}{
@@ -156,7 +144,6 @@ linModel <- function(
     dep,
     indeps,
     modelTerms,
-    anovaType = "2",
     contourFormula) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
@@ -176,7 +163,6 @@ linModel <- function(
         dep = dep,
         indeps = indeps,
         modelTerms = modelTerms,
-        anovaType = anovaType,
         contourFormula = contourFormula)
 
     analysis <- linModelClass$new(

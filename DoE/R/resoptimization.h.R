@@ -9,6 +9,8 @@ resOptimizationOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6C
             deps = NULL,
             indeps = NULL,
             modelTerms = NULL,
+            numFactors = NULL,
+            actualValues = NULL,
             targetGoals = NULL,
             lowerUpperBounds = NULL, ...) {
 
@@ -31,6 +33,12 @@ resOptimizationOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6C
             private$..modelTerms <- jmvcore::OptionTerms$new(
                 "modelTerms",
                 modelTerms)
+            private$..numFactors <- jmvcore::OptionString$new(
+                "numFactors",
+                numFactors)
+            private$..actualValues <- jmvcore::OptionString$new(
+                "actualValues",
+                actualValues)
             private$..targetGoals <- jmvcore::OptionString$new(
                 "targetGoals",
                 targetGoals)
@@ -41,6 +49,8 @@ resOptimizationOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6C
             self$.addOption(private$..deps)
             self$.addOption(private$..indeps)
             self$.addOption(private$..modelTerms)
+            self$.addOption(private$..numFactors)
+            self$.addOption(private$..actualValues)
             self$.addOption(private$..targetGoals)
             self$.addOption(private$..lowerUpperBounds)
         }),
@@ -48,12 +58,16 @@ resOptimizationOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6C
         deps = function() private$..deps$value,
         indeps = function() private$..indeps$value,
         modelTerms = function() private$..modelTerms$value,
+        numFactors = function() private$..numFactors$value,
+        actualValues = function() private$..actualValues$value,
         targetGoals = function() private$..targetGoals$value,
         lowerUpperBounds = function() private$..lowerUpperBounds$value),
     private = list(
         ..deps = NA,
         ..indeps = NA,
         ..modelTerms = NA,
+        ..numFactors = NA,
+        ..actualValues = NA,
         ..targetGoals = NA,
         ..lowerUpperBounds = NA)
 )
@@ -94,7 +108,7 @@ resOptimizationResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6C
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="compositeDes",
-                title="Composite Desirability"))}))
+                title="Composite (Overall) Desirability"))}))
 
 resOptimizationBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "resOptimizationBase",
@@ -123,6 +137,8 @@ resOptimizationBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
 #' @param deps .
 #' @param indeps .
 #' @param modelTerms .
+#' @param numFactors .
+#' @param actualValues .
 #' @param targetGoals .
 #' @param lowerUpperBounds .
 #' @return A results object containing:
@@ -140,6 +156,8 @@ resOptimization <- function(
     deps,
     indeps,
     modelTerms,
+    numFactors,
+    actualValues,
     targetGoals,
     lowerUpperBounds) {
 
@@ -160,6 +178,8 @@ resOptimization <- function(
         deps = deps,
         indeps = indeps,
         modelTerms = modelTerms,
+        numFactors = numFactors,
+        actualValues = actualValues,
         targetGoals = targetGoals,
         lowerUpperBounds = lowerUpperBounds)
 

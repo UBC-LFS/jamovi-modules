@@ -16,11 +16,14 @@ resMeansClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                             <h5>Example</h5>
                             <div>Suppose that there are 6 variables such as A, B, C, D, E and F.</div>
                             <ul>
-                                <li>A, B and C are independent variables.</li>
+                                <li>A, B and C are independent variables</li>
                                 <li>D, E and F are response variables</li>
                             </ul>
-                            <div>Please enter <strong>D, E, F</strong> in the Response Table for Means.</div>
-                            <div>Please enter <strong>A</strong> in the Main Effects Plot for Means.</div>
+                            <div>Please enter the following inputs.</div>
+                            <ul>
+                                <li>Response Variables: <strong>D, E, F</strong> in the Response Table for Means</li>
+                                <li>Independent Variable: <strong>A</strong> in the Main Effects Plot for Means</li>
+                            </ul>
                         </div>
                     </div>
                 </body>
@@ -34,7 +37,7 @@ resMeansClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             indeps <- self$options$indeps
 
             # Make factor ranks
-            if (length(self$options$resVars) > 0) {
+            if ( !is.null(self$options$resVars) && nchar(self$options$resVars) > 0 ) {
                 resVars = strsplit(self$options$resVars, ',')[[1]]
                 df <- data.frame(data)
                 
@@ -56,7 +59,7 @@ resMeansClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     
                     temp <- vector()
                     for (j in 1:length(newSplited)) {
-                        selected <- select(newSplited[[j]], resVars)
+                        selected <- select(newSplited[[j]], trimws(resVars))
                         merged <- lapply(selected, sum)
                         summed <- colSums(do.call(rbind, merged))
                         result <- summed / (nrow(newSplited[[j]]) * length(resVars))
@@ -84,12 +87,12 @@ resMeansClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             }
 
             # Main Effects Plot for Means
-            if (length(self$options$indepPlot) > 0) {
-                indep <- self$options$indepPlot
+            if ( !is.null(self$options$indepPlot) && nchar(self$options$indepPlot) > 0 ) {
+                indep <- trimws(self$options$indepPlot)
                 resVars = strsplit(self$options$resVars, ',')[[1]]
                 df <- data.frame(data)
 
-                resCols <- select(df, resVars)
+                resCols <- select(df, trimws(resVars))
                 df$Means <- rowMeans(resCols)
                 formula <- jmvcore::constructFormula('Means', indep)
 

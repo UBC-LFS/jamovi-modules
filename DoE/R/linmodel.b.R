@@ -29,11 +29,11 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         <div>
                             <h5>Example</h5>
                             <ul>
-                                <li>C is a dependent variable and A and B are independent variables, and squared terms would be <strong>AA</strong> and <strong>BB</strong>.</li>
                                 <li>Contour Formula: ~ A + B (or B ~ A)</li>
                             </ul>
                             <h5>Note</h5>
                             <ul>
+                                <li>If C is a dependent variable and A and B are independent variables, and squared terms would be <strong>I(A^2)</strong> and <strong>I(B^2)</strong>.</li>
                                 <li>If there are NA values in the Linear Regression coefficients, the result would not be accurate</li>                                
                             </ul>
                         </div>
@@ -48,24 +48,25 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             data <- self$data
             dep <- self$options$dep
             indeps <- self$options$indeps
-            anovaType <- self$options$anovaType
+
+            numericalData <- list()
+            for (n in names(data)) {
+                numericalData[[ n ]] <- jmvcore::toNumeric(data[[ n ]])
+            }
 
             # Make a formula
             # Reference: https://github.com/jamovi/jmvbaseR/blob/master/R/regression.b.R
-            data[[dep]] <- jmvcore::toNumeric(data[[dep]])
+            data[[ dep ]] <- jmvcore::toNumeric(data[[ dep ]])
             formula <- private$.formula()
             formula <- as.formula(formula)
 
-            model <- lm(formula = formula, data = data)
-            self$results$linearReg$setContent( summary(model) )
-
-            anova <- Anova(model, type = anovaType)
-            self$results$anova$setContent(anova)
+            numericalModel <- lm(formula = formula, data = numericalData)
+            self$results$linearReg$setContent( summary(numericalModel) )
 
             # Make factor levels
             # Reference: https://github.com/cran/pid/blob/master/R/paretoPlot.R
-            coef(model)
-            coeff.full <- coef(model)[2:length(coef(model))]
+            coef(numericalModel)
+            coeff.full <- coef(numericalModel)[2:length(coef(numericalModel))]
             coeff.full <- na.omit(coeff.full)
             coeff.abs <- unname(abs(coeff.full))
             coeff <- sort(coeff.abs, index.return = TRUE, method = "shell")
@@ -73,12 +74,17 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             temp <- names(coeff.full)[coeff$ix]
             fnames <- factor(temp, levels = temp, ordered = TRUE)
 
+            # ANOVA
+            model <- lm(formula = formula, data = data, stringsAsFactors=TRUE)
+            anova <- stats::anova(model)
+            self$results$anova$setContent(anova)
+
             self$results$factorLevels$setContent(fnames)
 
             # Pareto plot
             self$results$paretoPlot$setState(model)
 
-            if (!is.null(self$options$contourFormula) && nchar(self$options$contourFormula) > 0) {
+            if ( !is.null(self$options$contourFormula) && nchar(self$options$contourFormula) > 0 ) {
                 contourFormula <- as.formula(self$options$contourFormula)
                 contourData <- list(model = model, contourFormula = contourFormula)
                 self$results$contourPlot$setState(contourData)
@@ -93,6 +99,7 @@ linModelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             rhs <- paste0(terms, collapse=' + ')
             lhs <- jmvcore::composeTerm(self$options$dep)
             formula <- paste0(lhs, ' ~ ', rhs)
+            formula <- gsub("`", "", formula, fixed=TRUE)
             formula
         },
         .ff = function() {

@@ -36,13 +36,13 @@ boxBehnkenClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             </html>')
         },
         .run = function() {
-            
-            nCenter <- as.double(self$options$numberCenter)
-            nFactors <- as.double(self$options$numberFactors)
 
             # To check whether intpus are valid or not
-            if (nCenter < 1 || nFactors < 1 || nchar(self$options$nameFactors) == 0 || nchar(self$options$defaultLevels) == 0)
+            if (self$options$numberCenter < 1 || self$options$numberFactors < 1 || is.null(self$options$nameFactors) || nchar(self$options$nameFactors) == 0 || is.null(self$options$defaultLevels) || nchar(self$options$defaultLevels) == 0)
                 return()
+
+            nCenter <- as.double(self$options$numberCenter)
+            nFactors <- as.double(self$options$numberFactors)
 
             nameFactors <- strsplit(self$options$nameFactors, ',')
             if (length(nameFactors[[1]]) < 1)

@@ -22,6 +22,6 @@ items:
       type:  Preformatted
 
     - name:  compositeDes
-      title: Composite Desirability
+      title: Composite (Overall) Desirability
       type:  Preformatted
 ...

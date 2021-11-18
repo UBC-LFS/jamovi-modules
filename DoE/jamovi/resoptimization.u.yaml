@@ -69,6 +69,14 @@ children:
     margin: large
     children:
       - type: TextBox
+        name: numFactors
+        format: string
+        stretchFactor: 6
+      - type: TextBox
+        name: actualValues
+        format: string
+        stretchFactor: 6
+      - type: TextBox
         name: targetGoals
         format: string
         stretchFactor: 6

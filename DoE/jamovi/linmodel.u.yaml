@@ -67,12 +67,6 @@ children:
                 template:
                   type: TermLabel
   - type: Label
-    label: ANOVA
-    children:
-      - type: ComboBox
-        name: anovaType
-
-  - type: Label
     label: Contour Plot
     margin: large
     children:

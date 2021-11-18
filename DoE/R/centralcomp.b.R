@@ -39,7 +39,7 @@ centralCompClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         .run = function() {
             
             # To check whether intpus are valid or not
-            if (length(self$options$numberCenter) == 0 || length(self$options$numberFactors) == 0 || length(self$options$nameFactors) == 0 || length(self$options$eachDefaultLevels) == 0)
+            if (self$options$numberCenter < 1 || self$options$numberFactors < 1 || is.null(self$options$nameFactors) || nchar(self$options$nameFactors) == 0 || is.null(self$options$eachDefaultLevels) || nchar(self$options$eachDefaultLevels) == 0)
                 return()
 
             nCenter <- as.double(self$options$numberCenter)
@@ -90,7 +90,7 @@ centralCompClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             }
 
             df <- data.frame(temp)
-            names(df) <- nameFactors
+            names(df) <- trimws(nameFactors)
             result <- cbind(select(order, c(run.no.in.std.order, run.no)), df)
             self$results$text$setContent(result)
         }
