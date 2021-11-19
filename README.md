@@ -7,7 +7,6 @@
 
 This DoE module contains 4 different design categories such as Factorial Design, Responsive Surface Design, Mixture Design and Taguchi Design.
 
-
 ### Table of contents
 1. Design of Experiments (DoE)
     - Factorial Designs
@@ -22,7 +21,12 @@ This DoE module contains 4 different design categories such as Factorial Design,
       - Simplex Lattice
     - More Designs
       - Taguchi
-    - Linear Model
-      - Linear Regression
-      - ANOVA
-    - Mixture Model
+    - Models
+      - Linear Model (Linear Regression, ANOVA, Pareto Plot, Contour Plot)
+      - Mixture Model (Mixture Model, Mixture Contour Plot)
+    - Additional Features for Response
+      - Response Means
+      - Response Optimization
+    - More Plots
+      - Main Effects and Interaction Plots
+      - Normal QQ Plot
