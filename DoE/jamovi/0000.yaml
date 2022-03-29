@@ -1,12 +1,12 @@
 ---
 title: Design of Experiments in R
 name: DoE
-version: 1.0.2
+version: 1.0.3
 jms: '1.0'
 authors:
   - Brandon Oh
 maintainer: Brandon Oh <brandon.oh@ubc.ca>
-date: '2021-09-21'
+date: '2022-03-29'
 type: R
 description: >-
   This module is designed for learning Design of Experiments (DoE) and running
