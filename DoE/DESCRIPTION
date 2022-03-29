@@ -1,7 +1,7 @@
 Package: DoE
 Type: Package
 Title: Design of Experiments in R
-Version: 1.0.2
+Version: 1.0.3
 Author: Brandon Oh
 Maintainer: Brandon Oh <brandon.oh@ubc.ca>
 Description: This module is designed for learning Design of Experiments (DoE) and running under R packages such as DoE.base, FrF2, DoE.wrapper and mixexp.
