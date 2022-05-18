@@ -30,3 +30,36 @@ This DoE module contains 4 different design categories such as Factorial Design,
     - More Plots
       - Main Effects and Interaction Plots
       - Normal QQ Plot
+
+
+## How to create this DoE module
+
+1. Open R or RStudio
+
+2. Install **jmvtools**
+
+```
+install.packages('jmvtools', repos=c('https://repo.jamovi.org', 'https://cran.r-project.org'))
+```
+
+3. Set options
+
+```
+# Windows
+options(jamovi_home='C:\\Program Files\\jamovi 2.2.5.0')
+
+# MacOS
+options(jamovi_home='/Applications/jamovi.app/Contents')
+```
+
+4. Set a current directory
+
+```
+setwd('YOUR_DIRECTORY/jamovi-modules/DoE')
+```
+
+5. Run the jmvtools
+
+```
+jmvtools::install()
+```
